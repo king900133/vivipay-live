@@ -1,13 +1,13 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" style="font-size: 44.8px;">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ViviPay Login</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>ViviPay</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
     
     <style>
-        /* Base Reset */
+        /* Exact App Reset to match production environment */
         * {
             box-sizing: border-box;
             margin: 0;
@@ -19,71 +19,73 @@
             background-color: #ffffff;
             width: 100%;
             height: 100%;
-            margin: 0;
-            padding: 0;
             overflow-x: hidden;
-            display: flex;
-            justify-content: center;
         }
 
-        .login-wrapper {
+        /* Standard App Wrapper */
+        #app {
             width: 100%;
-            max-width: 412px; 
-            min-height: 100vh;
-            background-color: #ffffff;
+            height: 100%;
+        }
+
+        /* Client Dom Spec: <main data-v-6ffee151 style="height: 100vh;"> */
+        main[data-v-6ffee151] {
+            height: 100vh;
+            width: 100%;
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding: 45px 30px;
-            position: relative;
+            background-color: #ffffff;
+            padding: 0 0.67rem; /* Equivalent spacing */
         }
 
-        /* 👑 EXACT MATCH ORIGINAL LOGO DESIGN 👑 */
-        .brand-container {
-            margin-top: 50px;
-            margin-bottom: 70px; 
+        /* Client Dom Spec: <div data-v-6ffee151=""> for Logo Box */
+        div[data-v-6ffee151]:not(.loginform) {
+            width: 100%;
             display: flex;
             justify-content: center;
             align-items: center;
-            width: 100%;
+            margin-top: 1.2rem;
         }
 
-        .brand-logo {
-            width: 200px;  
-            height: 200px;
+        /* Exact Match Image Selection Specs (302.39 x 222.81 Box Ratio) */
+        img.logo {
+            width: 302.39px;
+            height: 222.81px;
             object-fit: contain;
         }
 
-        .auth-form {
+        /* Client Dom Spec: <div data-v-6ffee151 class="loginform" style="transform: translateY(-50px);"> */
+        .loginform {
             width: 100%;
+            max-width: 380px;
             display: flex;
             flex-direction: column;
+            transform: translateY(-25px); /* Perfectly balanced native offset alignment */
         }
 
-        /* ORIGINAL CAPSULE INPUTS */
+        /* UI Native Field Styling */
         .input-field-group {
-            background-color: #f6f9fe; 
-            border: none;
-            border-radius: 30px; /* Fully rounded capsule design */
+            background-color: #f6f9fe;
+            border-radius: 30px;
             display: flex;
             align-items: center;
-            padding: 18px 24px; 
-            margin-bottom: 20px;
+            padding: 16px 22px;
+            margin-bottom: 18px;
             width: 100%;
         }
 
         .field-icon {
             display: flex;
             align-items: center;
-            margin-right: 14px;
+            margin-right: 12px;
         }
 
-        /* Thin stroke soft blue icons exactly like original */
         .field-icon svg {
-            width: 24px; 
-            height: 24px;
-            stroke: #1a85ff; 
-            stroke-width: 1.5;
+            width: 22px;
+            height: 22px;
+            stroke: #1a85ff;
+            stroke-width: 1.6;
             fill: none;
         }
 
@@ -91,25 +93,23 @@
             border: none;
             background: transparent;
             width: 100%;
-            font-size: 18px; 
+            font-size: 16px;
             outline: none;
             color: #333333;
-            font-weight: 400;
         }
 
         .input-field-group input::placeholder {
-            color: #bcccdf; 
-            font-weight: 400;
+            color: #bcccdf;
         }
 
-        /* UTILITIES AREA */
+        /* Utilities Structure */
         .form-utilities {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            font-size: 16px; 
-            margin-top: 5px;
-            margin-bottom: 45px;
+            font-size: 15px;
+            margin-top: 2px;
+            margin-bottom: 35px;
             width: 100%;
             padding: 0 4px;
         }
@@ -119,22 +119,19 @@
             align-items: center;
             color: #1a85ff;
             cursor: pointer;
-            font-weight: 400;
         }
 
-        /* Round hollow circle check */
         .remember-me input {
             appearance: none;
             -webkit-appearance: none;
-            width: 18px;
-            height: 18px;
+            width: 16px;
+            height: 16px;
             border: 1.2px solid #bcccdf;
-            border-radius: 50%; 
+            border-radius: 50%;
+            margin-right: 8px;
             outline: none;
-            margin-right: 10px;
-            cursor: pointer;
-            display: inline-block;
             background-color: #ffffff;
+            cursor: pointer;
         }
 
         .remember-me input:checked {
@@ -145,52 +142,52 @@
         .forgot-pass-link {
             text-decoration: none;
             color: #1a85ff;
-            font-weight: 400;
         }
 
-        /* SQUARE-ISH ROUNDED BUTTON EXTRANEOUS LOOK */
+        /* Action Login Button */
         .submit-btn {
-            background-color: #1a85ff; 
+            background-color: #1a85ff;
             color: #ffffff;
             border: none;
             width: 100%;
-            padding: 16px; 
-            border-radius: 10px; /* Slight roundness like screenshot */
-            font-size: 20px; 
+            padding: 15px;
+            border-radius: 10px;
+            font-size: 18px;
             font-weight: 500;
             cursor: pointer;
-            transition: background 0.2s ease;
+            transition: background 0.2s;
         }
 
         .submit-btn:active {
             background-color: #0071eb;
         }
 
-        /* PRIVACY POLICY */
-        .policy-agreement {
-            margin-top: 25px;
+        /* Bottom Privacy Spec: <div data-v-6ffee151 style="height: 3rem;"> */
+        .policy-container-box {
+            margin-top: 20px;
+            height: 3rem;
             display: flex;
             justify-content: center;
             align-items: center;
-            font-size: 13px;
-            color: #666666;
             width: 100%;
         }
 
         .agreement-label {
             display: flex;
             align-items: center;
+            font-size: 13px;
+            color: #666666;
             cursor: pointer;
         }
 
         .agreement-label input {
             appearance: none;
             -webkit-appearance: none;
-            width: 18px;
-            height: 18px;
+            width: 16px;
+            height: 16px;
             border: 1px solid #1a85ff;
             border-radius: 50%;
-            margin-right: 8px;
+            margin-right: 6px;
             outline: none;
             background-color: #1a85ff;
             position: relative;
@@ -203,26 +200,24 @@
             content: '✓';
             position: absolute;
             color: white;
-            font-size: 12px;
+            font-size: 11px;
             font-weight: bold;
-            top: -1px;
         }
 
         .policy-link {
             color: #1a85ff;
             text-decoration: none;
-            cursor: pointer;
-            margin-left: 4px;
+            margin-left: 3px;
         }
 
-        /* OTP MODAL */
+        /* OTP Popup Layer */
         .otp-modal-overlay {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0, 0, 0, 0.4); 
+            background-color: rgba(0, 0, 0, 0.4);
             display: flex;
             justify-content: center;
             align-items: center;
@@ -241,56 +236,54 @@
         .otp-modal-container {
             background-color: #ffffff;
             width: 100%;
-            max-width: 360px;
-            border-radius: 18px;
-            padding: 30px 24px;
+            max-width: 350px;
+            border-radius: 16px;
+            padding: 28px 20px;
             position: relative;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
             text-align: center;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
         }
 
         .otp-close-btn {
             position: absolute;
-            top: 14px;
-            right: 16px;
-            font-size: 22px;
+            top: 12px;
+            right: 14px;
+            font-size: 20px;
             color: #94a3b8;
-            cursor: pointer;
             background: none;
             border: none;
+            cursor: pointer;
             outline: none;
         }
 
         .otp-title {
-            font-size: 22px;
+            font-size: 20px;
             font-weight: 500;
             color: #1e293b;
-            margin-top: 10px;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
         }
 
         .otp-subtitle {
-            font-size: 15px;
+            font-size: 14px;
             color: #64748b;
-            margin-bottom: 26px;
+            margin-bottom: 22px;
         }
 
         .otp-input-container {
             display: flex;
             justify-content: space-between;
-            gap: 12px;
-            margin-bottom: 24px;
+            gap: 10px;
+            margin-bottom: 20px;
         }
 
         .otp-box {
-            width: 50px;
-            height: 50px;
+            width: 46px;
+            height: 46px;
             border: none;
             border-bottom: 2.5px solid #cbd5e1;
             text-align: center;
-            font-size: 24px;
+            font-size: 22px;
             font-weight: 600;
-            color: #1e293b;
             outline: none;
             background: transparent;
         }
@@ -300,63 +293,65 @@
         }
 
         .otp-timer {
-            font-size: 14px;
+            font-size: 13px;
             color: #94a3b8;
-            margin-top: 15px;
         }
     </style>
 </head>
 <body>
 
-    <div class="login-wrapper">
-        <!-- Exact Ratio Logo Container -->
-        <div class="brand-container">
-            <img src="https://vivipay.net/static/images/Login_Logo.png" alt="Brand Logo" class="brand-logo">
-        </div>
-
-        <form class="auth-form" id="loginForm">
-            <!-- Mobile Field -->
-            <div class="input-field-group">
-                <span class="field-icon">
-                    <svg viewBox="0 0 24 24">
-                        <rect x="6" y="2" width="12" height="20" rx="2" ry="2"></rect>
-                        <line x1="12" y1="18" x2="12.01" y2="18"></line>
-                    </svg>
-                </span>
-                <input type="tel" id="phoneNumber" placeholder="Enter phone number" required>
+    <div id="app">
+        <main data-v-6ffee151 style="height: 100vh;">
+            
+            <div data-v-6ffee151="">
+                <img src="https://vivipay.net/static/images/Login_Logo.png" class="logo" alt="Brand Logo">
             </div>
 
-            <!-- Password Field -->
-            <div class="input-field-group">
-                <span class="field-icon">
-                    <svg viewBox="0 0 24 24">
-                        <rect x="4" y="11" width="16" height="11" rx="2" ry="2"></rect>
-                        <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
-                    </svg>
-                </span>
-                <input type="password" id="password" placeholder="Enter password" required>
+            <div data-v-6ffee151 class="loginform">
+                <form id="loginForm" style="width: 100%; display: flex; flex-direction: column;">
+                    
+                    <div class="input-field-group">
+                        <span class="field-icon">
+                            <svg viewBox="0 0 24 24">
+                                <rect x="6" y="2" width="12" height="20" rx="2" ry="2"></rect>
+                                <line x1="12" y1="18" x2="12.01" y2="18"></line>
+                            </svg>
+                        </span>
+                        <input type="tel" id="phoneNumber" placeholder="Enter phone number" required>
+                    </div>
+
+                    <div class="input-field-group">
+                        <span class="field-icon">
+                            <svg viewBox="0 0 24 24">
+                                <rect x="4" y="11" width="16" height="11" rx="2" ry="2"></rect>
+                                <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                            </svg>
+                        </span>
+                        <input type="password" id="password" placeholder="Enter password" required>
+                    </div>
+
+                    <div class="form-utilities">
+                        <label class="remember-me">
+                            <input type="checkbox" id="save-pwd">
+                            Save Password
+                        </label>
+                        <a href="#" class="forgot-pass-link">Forgot password</a>
+                    </div>
+
+                    <button type="submit" class="submit-btn">Login</button>
+                </form>
             </div>
 
-            <div class="form-utilities">
-                <label class="remember-me">
-                    <input type="checkbox" id="save-pwd">
-                    Save Password
-                </label>
-                <a href="#" class="forgot-pass-link">Forgot password</a>
-            </div>
-
-            <button type="submit" class="submit-btn">Login</button>
-
-            <div class="policy-agreement">
+            <div data-v-6ffee151 style="height: 3rem;" class="policy-container-box">
                 <label class="agreement-label">
                     <input type="checkbox" id="agreeCheck" required checked>
                     Agree <span class="policy-link">"User Privacy Agreement"</span>
                 </label>
             </div>
-        </form>
+
+        </main>
     </div>
 
-    <!-- OTP Modal Overlay -->
     <div class="otp-modal-overlay" id="otpModal">
         <div class="otp-modal-container">
             <button class="otp-close-btn" id="closeOtpBtn">&times;</button>
