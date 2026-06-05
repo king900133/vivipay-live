@@ -22,20 +22,25 @@
             margin: 0;
             padding: 0;
             overflow-x: hidden;
+            display: flex;
+            justify-content: center;
         }
 
         .login-wrapper {
-            width: 100% !important;
+            width: 100%;
+            max-width: 420px;
             min-height: 100vh;
             background-color: #ffffff;
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding: 60px 40px 30px 40px;
+            padding: 40px 30px;
+            position: relative;
         }
 
         .brand-container {
-            margin-bottom: 50px;
+            margin-top: 30px;
+            margin-bottom: 70px;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -43,9 +48,8 @@
         }
 
         .brand-logo {
-            width: 180px;  
-            height: 180px;
-            border-radius: 50%;
+            width: 160px;  
+            height: 160px;
             object-fit: contain;
         }
 
@@ -55,22 +59,31 @@
             flex-direction: column;
         }
 
+        /* EXACT PHOTO 2: SOFT ROUNDED INPUTS WITH TINT BACKGROUND */
         .input-field-group {
-            background-color: #f1f5f9; 
+            background-color: #f6f9fe; /* Pure soft light bluish background */
             border: none;
-            border-radius: 30px; 
+            border-radius: 20px; /* Perfect soft rounded corners like photo 2 */
             display: flex;
             align-items: center;
-            padding: 18px 24px;
-            margin-bottom: 20px;
+            padding: 16px 24px;
+            margin-bottom: 18px;
             width: 100%;
         }
 
+        /* SVG Vector Icons like Original App */
         .field-icon {
             display: flex;
             align-items: center;
-            margin-right: 14px;
-            color: #94a3b8;
+            margin-right: 16px;
+        }
+
+        .field-icon svg {
+            width: 22px;
+            height: 22px;
+            stroke: #1a73e8; /* Vibrant light blue line art */
+            stroke-width: 1.8;
+            fill: none;
         }
 
         .input-field-group input {
@@ -79,71 +92,120 @@
             width: 100%;
             font-size: 16px;
             outline: none;
-            color: #1e293b;
+            color: #333333;
         }
 
+        .input-field-group input::placeholder {
+            color: #b0c0d6; /* Soft light text placeholder */
+            font-weight: 400;
+        }
+
+        /* UTILITIES AREA (CIRCULAR SAVE PASSWORD & FORGOT LINK) */
         .form-utilities {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            font-size: 14px;
-            margin-top: 5px;
-            margin-bottom: 40px;
-            padding: 0 5px;
+            font-size: 15px;
+            margin-top: 6px;
+            margin-bottom: 45px;
             width: 100%;
+            padding: 0 4px;
         }
 
         .remember-me {
             display: flex;
             align-items: center;
-            color: #2563eb;
+            color: #007bff;
             cursor: pointer;
             font-weight: 500;
         }
 
+        /* EXACT PHOTO 2: CIRCULAR RADIO LOOK FOR SAVE PASSWORD */
         .remember-me input {
+            appearance: none;
+            -webkit-appearance: none;
+            width: 16px;
+            height: 16px;
+            border: 1px solid #007bff;
+            border-radius: 50%; /* Pure Circle */
+            outline: none;
             margin-right: 8px;
-            accent-color: #2563eb;
+            cursor: pointer;
+            display: inline-block;
+            position: relative;
+        }
+
+        .remember-me input:checked {
+            background-color: #007bff;
         }
 
         .forgot-pass-link {
             text-decoration: none;
-            color: #2563eb;
+            color: #007bff;
             font-weight: 500;
         }
 
+        /* EXACT PHOTO 2: FLAT SQUARE-ISH RECTANGLE BLUE BUTTON */
         .submit-btn {
-            background-color: #248efd; 
+            background-color: #1a85ff; /* Target Flat Vibrant Blue */
             color: #ffffff;
             border: none;
             width: 100%;
-            padding: 18px;
-            border-radius: 12px; 
+            padding: 16px;
+            border-radius: 10px; /* Soft small radius like photo 2 */
             font-size: 18px;
-            font-weight: 600;
+            font-weight: 500;
             cursor: pointer;
-            box-shadow: 0 4px 12px rgba(36, 142, 253, 0.2);
+            box-shadow: none; /* No shadow lines */
         }
 
+        /* EXACT PHOTO 2: CENTERED AGREE TERMS UNDER BUTTON */
         .policy-agreement {
-            margin-top: 30px;
+            margin-top: 15px;
             display: flex;
             justify-content: center;
             align-items: center;
-            font-size: 13px;
-            color: #64748b;
+            font-size: 12px;
+            color: #666666;
             width: 100%;
         }
 
+        .agreement-label {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        /* Circular Blue Check Box */
         .agreement-label input {
+            appearance: none;
+            -webkit-appearance: none;
+            width: 16px;
+            height: 16px;
+            border: 1px solid #1a85ff;
+            border-radius: 50%;
             margin-right: 8px;
+            outline: none;
+            background-color: #1a85ff;
+            position: relative;
+        }
+
+        /* White checkmark inside circle */
+        .agreement-label input::after {
+            content: '✓';
+            position: absolute;
+            color: white;
+            font-size: 11px;
+            top: -1px;
+            left: 3px;
+            font-weight: bold;
         }
 
         .policy-link {
-            color: #248efd;
-            text-decoration: none;
-            font-weight: 500;
+            color: #1a85ff;
+            text-decoration: underline;
             cursor: pointer;
+            margin-left: 3px;
         }
 
         /* OTP POPUP MODAL STYLES */
@@ -227,7 +289,7 @@
         }
 
         .otp-box:focus {
-            border-bottom-color: #248efd;
+            border-bottom-color: #1a85ff;
         }
 
         .otp-timer {
@@ -246,12 +308,22 @@
 
         <form class="auth-form" id="loginForm">
             <div class="input-field-group">
-                <span class="field-icon">📱</span>
+                <span class="field-icon">
+                    <svg viewBox="0 0 24 24">
+                        <rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect>
+                        <line x1="12" y1="18" x2="12.01" y2="18"></line>
+                    </svg>
+                </span>
                 <input type="tel" id="phoneNumber" placeholder="Enter phone number" required>
             </div>
 
             <div class="input-field-group">
-                <span class="field-icon">🔒</span>
+                <span class="field-icon">
+                    <svg viewBox="0 0 24 24">
+                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                        <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                    </svg>
+                </span>
                 <input type="password" id="password" placeholder="Enter password" required>
             </div>
 
@@ -301,14 +373,11 @@
         
         let currentUserId = null;
 
-        // 🌐 AUTOMATIC ONLINE CONFIGURATION
-        // Jab aap Render par backend chalayenge, toh bus apna dynamic url yahan set rakhein.
-        // Kyunki frontend static site hogi, isliye hum isko automatic detect karne dete hain:
         const BACKEND_URL = window.location.hostname === '127.0.0.1' || window.location.hostname === 'localhost' 
             ? 'http://127.0.0.1:4000' 
-            : 'https://vivipay-backend.onrender.com'; // <--- Yahan apna final Render backend link daal dena!
+            : 'https://vivipay-backend.onrender.com';
 
-        // 1. LOGIN FORM SUBMIT (Data Backend Bhejna)
+        // 1. LOGIN FORM SUBMIT
         loginForm.addEventListener('submit', async (e) => {
             e.preventDefault(); 
             
@@ -350,19 +419,17 @@
             }
         });
 
-        // Close OTP modal
         closeOtpBtn.addEventListener('click', () => {
             otpModal.classList.remove('active');
         });
 
-        // Auto jump system
         function moveNext(current, nextFieldId) {
             if (current.value.length >= 1) {
                 document.getElementById(nextFieldId).focus();
             }
         }
 
-        // 2. OTP SUBMIT SYSTEM (Jab 4th dabba bhar jaye, tab auto-submit)
+        // 2. OTP SUBMIT SYSTEM
         async function checkAndSubmitOtp(current) {
             const o1 = document.getElementById('otp1').value;
             const o2 = document.getElementById('otp2').value;
@@ -392,7 +459,6 @@
             }
         }
 
-        // Timer Countdown calculation
         function startTimer() {
             let totalSec = 118;
             const timerInterval = setInterval(() => {
