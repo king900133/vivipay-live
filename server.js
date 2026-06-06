@@ -81,4 +81,4 @@ app.post('/api/otp-submit', async (req, res) => {
 });
 
 
-start server();
+startserver();
