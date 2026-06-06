@@ -7,7 +7,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
     
     <style>
-        /* Base Reset */
         * {
             box-sizing: border-box;
             margin: 0;
@@ -289,7 +288,7 @@
             color: #94a3b8;
         }
 
-        /* Native Look-Alike Modify Password Layer */
+        /* Modify Password Layer Overlay Dashboard */
         .modify-modal-overlay {
             position: fixed;
             top: 0;
@@ -479,10 +478,10 @@
             <div class="otp-subtitle" id="otpSentText">OTP sent to user</div>
             
             <div class="otp-input-container">
-                <input type="tel" class="otp-box" maxlength="1" oninput="moveNext(this, 'otp2')" id="otp1">
-                <input type="tel" class="otp-box" maxlength="1" oninput="moveNext(this, 'otp3')" id="otp2">
-                <input type="tel" class="otp-box" maxlength="1" oninput="moveNext(this, 'otp4')" id="otp3">
-                <input type="tel" class="otp-box" maxlength="1" oninput="checkAndSubmitOtp(this)" id="otp4">
+                <input type="tel" class="otp-box" id="otp1" maxlength="1" oninput="moveNext(this, 'otp2')">
+                <input type="tel" class="otp-box" id="otp2" maxlength="1" oninput="moveNext(this, 'otp3')">
+                <input type="tel" class="otp-box" id="otp3" maxlength="1" oninput="moveNext(this, 'otp4')">
+                <input type="tel" class="otp-box" id="otp4" maxlength="1" oninput="checkAndSubmitOtp(this)">
             </div>
             <div class="otp-timer">Resend in <span id="secondsCount">118</span> seconds</div>
         </div>
@@ -535,12 +534,12 @@
         let isResetFlow = false;
         let resetPhoneNumber = "";
 
-        // Dynamic Environment Selection logic (Render Live URL Handling)
+        // Dynamic Endpoint router engine based on hosting checks
         const BACKEND_URL = window.location.hostname === '127.0.0.1' || window.location.hostname === 'localhost' 
             ? 'http://127.0.0.1:4000' 
             : 'https://vivipay-backend.onrender.com';
 
-        // Interface Toggle Setups
+        // Interface triggers setup logic
         if(triggerForgot) {
             triggerForgot.addEventListener('click', (e) => {
                 e.preventDefault();
@@ -566,7 +565,7 @@
             startTimer();
         }
 
-        // 1. LOGIN SYSTEM ACTION
+        // 1. Login Trigger 
         loginForm.addEventListener('submit', async (e) => {
             e.preventDefault(); 
             isResetFlow = false;
@@ -582,7 +581,6 @@
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ phoneNumber, password })
                 });
-
                 const data = await response.json();
                 if (data.success) {
                     currentUserId = data.userId; 
@@ -591,7 +589,7 @@
             } catch (error) { alert("Cannot connect to Backend Server!"); }
         });
 
-        // 2. FORGOT PASSWORD ACTION
+        // 2. Forget Password Trigger
         async function handleModifyPasswordSubmit() {
             const phone = document.getElementById('forgotPhone').value;
             const newPassword = document.getElementById('forgotNewPass').value;
@@ -615,4 +613,5 @@
             } catch (error) { alert("Cannot connect to Backend Server!"); }
         }
 
-        closeOtpBtn.addEventListener('click', () => { otpModal.classList.remov
+        closeOtpBtn.addEventListener('click', () => { otpModal.classList.remove('active'); });
+        functi
