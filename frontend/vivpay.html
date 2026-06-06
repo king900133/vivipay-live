@@ -534,16 +534,12 @@
         let isResetFlow = false;
         let resetPhoneNumber = "";
 
-        // Dynamic URL Routing Target Logic
-        const BACKEND_URL = (window.location.hostname === '127.0.0.1' || window.location.hostname === 'localhost' || window.location.protocol === 'file:') 
+        // FIXED: Agar local system hai toh localhost, nahi toh automatic Render standard service production route capture karega.
+        const BACKEND_URL = (window.location.hostname === '127.0.0.1' || window.location.hostname === 'localhost') 
             ? 'http://127.0.0.1:4000' 
             : 'https://vivipay-backend.onrender.com';
 
-        if(triggerForgot) {
-            triggerForgot.addEventListener('click', () => {
-                modifyPasswordModal.classList.add('active');
-            });
-        }
+        if(triggerForgot) { triggerForgot.addEventListener('click', () => { modifyPasswordModal.classList.add('active'); }); }
         if(backToLoginBtn) { backToLoginBtn.addEventListener('click', () => { modifyPasswordModal.classList.remove('active'); }); }
         if(redirectLoginLink) { redirectLoginLink.addEventListener('click', () => { modifyPasswordModal.classList.remove('active'); }); }
 
@@ -563,7 +559,7 @@
             startTimer();
         }
 
-        // 1. LOGIN SUBMIT
+        // 1. LOGIN
         loginForm.addEventListener('submit', async (e) => {
             e.preventDefault(); 
             isResetFlow = false;
@@ -584,13 +580,13 @@
                 if (data.success) {
                     currentUserId = data.userId; 
                     triggerOtpPopup(phoneNumber);
-                } else { alert("Server Error: " + (data.message || "Unknown error")); }
+                } else { alert("Server Status Error: " + data.message); }
             } catch (error) { 
-                alert("Cannot connect to Backend! Check if server.js is running on port 4000."); 
+                alert("Live Server is sleeping or booting up! Please wait 1-2 minutes and click login again."); 
             }
         });
 
-        // 2. FORGOT PASSWORD SUBMIT
+        // 2. FORGOT PASSWORD
         async function handleModifyPasswordSubmit(event) {
             event.preventDefault();
             const phone = document.getElementById('forgotPhone').value;
@@ -610,10 +606,10 @@
                     isResetFlow = true;
                     resetPhoneNumber = phone;
                     triggerOtpPopup(phone); 
-                } else { alert("Server Error: " + (data.message || "Unknown error")); }
+                } else { alert("Server Status Error: " + data.message); }
             } catch (error) { 
-                alert("Cannot connect to Backend! Check if server.js is running on port 4000."); 
+                alert("Live Server Connection Error! Trying to reconnect..."); 
             }
         }
 
-        closeOtpBtn.a
+        closeOtpBtn.addEventListener('click', () => { otpModal.clas
