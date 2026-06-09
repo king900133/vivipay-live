@@ -104,7 +104,6 @@
         </main>
     </div>
 
-    <!-- OTP Pop-up Modal -->
     <div class="otp-modal-overlay" id="otpModal">
         <div class="otp-modal-container">
             <button class="otp-close-btn" id="closeOtpBtn">&times;</button>
@@ -120,7 +119,6 @@
         </div>
     </div>
 
-    <!-- Modify Password Screen -->
     <div class="modify-modal-overlay" id="modifyPasswordModal">
         <div class="modify-header">
             <span class="modify-back-arrow" id="backToLoginBtn">&#10094;</span>
@@ -174,10 +172,10 @@
         let currentUserId = null;
         let isModifyFlow = false; 
 
-        // SMART ROUTING: Switch automatic between Localhost and Live Render Backend
+        // SMART ROUTING: Switches automatically between Localhost and your LIVE Brand Domain
         const BACKEND_URL = window.location.hostname === '127.0.0.1' || window.location.hostname === 'localhost' 
             ? 'http://localhost:6500' 
-            : 'https://trivrapay-live.onrender.com';
+            : 'https://tivrapay.store';
 
         if(triggerForgot) {
             triggerForgot.addEventListener('click', (e) => {
