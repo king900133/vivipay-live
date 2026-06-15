@@ -1,12 +1,4 @@
-<main data-v-6ffee151>
-    <div>
-        <img src="https://vivipay.net/static/images/Login_Logo.png" class="logo" alt="Tivra Pay Logo">
-    </div>
-    ```
 
-Aap is code ko copy karke apni file mein replace kar sakte hain:
-
-```html
 <!DOCTYPE html>
 <html lang="en" style="font-size: 44.8px;">
 <head>
@@ -21,7 +13,7 @@ Aap is code ko copy karke apni file mein replace kar sakte hain:
         #app { width: 100%; height: 100%; }
         main[data-v-6ffee151] { height: 100vh; width: 100%; display: flex; flex-direction: column; align-items: center; background-color: #ffffff; padding: 0 0.67rem; }
         div[data-v-6ffee151]:not(.loginform) { width: 100%; display: flex; justify-content: center; align-items: center; margin-top: 1.2rem; margin-bottom: 0.5rem; }
-        img.logo { width: 105%; max-width: 500px; height: auto; object-fit: contain;align-items:center; }
+        img.logo { width: 105%; max-width: 500px; height: auto; object-fit: contain; align-items: center; }
         .loginform { width: 100%; max-width: 380px; display: flex; flex-direction: column; }
         .input-field-group { background-color: transparent; border-bottom: 1.2px solid #e2e8f0; display: flex; align-items: center; padding: 14px 4px; margin-bottom: 22px; width: 100%; }
         .field-icon { display: flex; align-items: center; margin-right: 14px; }
@@ -34,42 +26,11 @@ Aap is code ko copy karke apni file mein replace kar sakte hain:
         .remember-me input:checked { border-color: #3b82f6; background-color: #3b82f6; }
         .forgot-pass-link { text-decoration: none; color: #3b82f6; cursor: pointer; }
         .submit-btn { background-color: #2563eb; color: #ffffff; border: none; width: 100%; padding: 14px; border-radius: 25px; font-size: 18px; font-weight: 500; cursor: pointer; box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2); transition: background 0.2s; }
-        .submit-btn:active { background-color: #1d4ed8; }
         .policy-container-box { margin-top: auto; margin-bottom: 25px; height: 3rem; display: flex; justify-content: center; align-items: center; width: 100%; }
         .agreement-label { display: flex; align-items: center; font-size: 13px; color: #64748b; cursor: pointer; }
         .agreement-label input { appearance: none; -webkit-appearance: none; width: 16px; height: 16px; border: 1px solid #2563eb; border-radius: 50%; margin-right: 8px; outline: none; background-color: #2563eb; position: relative; display: flex; align-items: center; justify-content: center; }
         .agreement-label input::after { content: '✓'; position: absolute; color: white; font-size: 11px; font-weight: bold; }
         .policy-link { color: #2563eb; text-decoration: none; margin-left: 3px; }
-        
-        /* OTP Modal Overlay */
-        .otp-modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.4); display: flex; justify-content: center; align-items: center; z-index: 30000; opacity: 0; pointer-events: none; transition: opacity 0.2s ease; padding: 24px; }
-        .otp-modal-overlay.active { opacity: 1; pointer-events: auto; }
-        .otp-modal-container { background-color: #ffffff; width: 100%; max-width: 350px; border-radius: 16px; padding: 28px 20px; position: relative; text-align: center; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15); }
-        .otp-close-btn { position: absolute; top: 12px; right: 14px; font-size: 20px; color: #94a3b8; background: none; border: none; cursor: pointer; outline: none; }
-        .otp-title { font-size: 20px; font-weight: 500; color: #1e293b; margin-top: 10px; margin-bottom: 6px; }
-        .otp-subtitle { font-size: 14px; color: #64748b; margin-bottom: 22px; }
-        .otp-input-container { display: flex; justify-content: space-between; gap: 10px; margin-bottom: 20px; }
-        .otp-box { width: 46px; height: 46px; border: none; border-bottom: 2.5px solid #cbd5e1; text-align: center; font-size: 22px; font-weight: 600; outline: none; background: transparent; }
-        .otp-box:focus { border-bottom-color: #2563eb; }
-        .otp-timer { font-size: 13px; color: #94a3b8; }
-
-        /* Modify Password Screen Overlay */
-        .modify-modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: #ffffff; z-index: 20000; display: none; flex-direction: column; padding: 16px 20px; }
-        .modify-modal-overlay.active { display: flex; }
-        .modify-header { display: flex; align-items: center; width: 100%; height: 48px; position: relative; margin-bottom: 15px; }
-        .modify-back-arrow { font-size: 24px; color: #70798b; cursor: pointer; text-decoration: none; position: absolute; left: 0; padding: 5px; }
-        .modify-header-title { font-size: 19px; font-weight: 600; color: #1a2a47; width: 100%; text-align: center; }
-        .modify-avatar-box { display: flex; flex-direction: column; align-items: center; margin-top: 5px; margin-bottom: 45px; width: 100%; }
-        .modify-avatar-img { width: 82px; height: 82px; border-radius: 50%; background-color: #f1f6ff; display: flex; justify-content: center; align-items: center; margin-bottom: 16px; }
-        .modify-form-title { font-size: 18px; color: #333333; font-weight: 400; }
-        .modify-form-container { width: 100%; max-width: 100%; display: flex; flex-direction: column; flex-grow: 1; }
-        .modify-row { display: flex; align-items: center; border-bottom: 1.2px solid #f1f4f9; padding: 16px 4px; width: 100%; }
-        .modify-label { font-size: 17px; color: #222222; width: 110px; font-weight: 500; }
-        .modify-input-box { border: none; outline: none; width: 100%; font-size: 17px; color: #333333; background: transparent; }
-        .modify-input-box::placeholder { color: #cbd5e1; font-weight: 400; }
-        .modify-redirect-link { align-self: flex-end; color: #0084ff; font-size: 14px; text-decoration: none; margin-top: 12px; font-weight: 400; }
-        .modify-btn-container { margin-top: auto; margin-bottom: 35px; padding: 0 4px; width: 100%; }
-        .modify-submit-btn { background-color: #0084ff; color: #ffffff; border: none; width: 100%; padding: 15px; border-radius: 12px; font-size: 18px; font-weight: 500; cursor: pointer; text-align: center; }
     </style>
 </head>
 <body>
@@ -113,5 +74,5 @@ Aap is code ko copy karke apni file mein replace kar sakte hain:
         </main>
     </div>
 
-    </body>
+</body>
 </html>
